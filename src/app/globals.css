@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+  --color-primary-950: #1e1b4b;
+
+  --color-dark-50: #f8fafc;
+  --color-dark-100: #f1f5f9;
+  --color-dark-200: #e2e8f0;
+  --color-dark-300: #cbd5e1;
+  --color-dark-400: #94a3b8;
+  --color-dark-500: #64748b;
+  --color-dark-600: #475569;
+  --color-dark-700: #334155;
+  --color-dark-800: #1e293b;
+  --color-dark-900: #0f172a;
+  --color-dark-950: #020617;
+
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-slide-up: slideUp 0.5s ease-out;
+  --animate-slide-in-left: slideInLeft 0.3s ease-out;
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce-slow: bounce 2s infinite;
+  --animate-glow-pulse: glowPulse 2s infinite ease-in-out;
+  --animate-glow-pulse-red: glowPulseRed 2s infinite ease-in-out;
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes slideUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideInLeft {
+    0% { opacity: 0; transform: translateX(-20px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.2), 0 0 10px rgba(99, 102, 241, 0.1); }
+    50% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.5), 0 0 25px rgba(99, 102, 241, 0.2); }
+  }
+  @keyframes glowPulseRed {
+    0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2), 0 0 10px rgba(239, 68, 68, 0.1); }
+    50% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.5), 0 0 25px rgba(239, 68, 68, 0.2); }
+  }
+}
+
+/* Custom Scrollbar and Base Styles */
+body {
+  background-color: var(--color-dark-950);
+  color: var(--color-dark-100);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-dark-600);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dark-500);
+}
+
+/* Component Utilities */
+@utility gov-card {
+  @apply bg-dark-900 border border-dark-700/50 rounded-xl shadow-sm overflow-hidden transition-all duration-200;
+}
+
+@utility gov-card-interactive {
+  @apply gov-card hover:border-primary-500/50 hover:bg-dark-800/50 cursor-pointer;
+}
+
+@utility gov-sidebar {
+  @apply w-64 bg-dark-950 border-r border-dark-800 hidden md:flex flex-col p-6;
+}
+
+@utility gradient-text {
+  @apply bg-gradient-to-r from-white to-dark-400 bg-clip-text text-transparent font-bold;
+}
+
+@utility btn-gov-primary {
+  @apply px-6 py-2.5 bg-primary-600 text-white font-bold rounded-lg
+         hover:bg-primary-500 transition-all duration-200 shadow-lg shadow-primary-900/10
+         active:scale-[0.98] disabled:opacity-50;
+}
+
+@utility btn-gov-secondary {
+  @apply px-6 py-2.5 bg-dark-800 text-dark-100 font-bold rounded-lg
+         hover:bg-dark-700 transition-all duration-200 border border-dark-700
+         active:scale-[0.98] disabled:opacity-50;
+}
+
+@utility input-gov {
+  @apply w-full px-4 py-3 bg-dark-950 border border-dark-700 rounded-lg text-dark-100
+         placeholder-dark-600 focus:outline-none focus:ring-1 focus:ring-primary-500 
+         focus:border-primary-500 transition-all duration-200;
+}
+
+@utility status-chip {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest;
+}
+
+@utility status-active {
+  @apply status-chip bg-primary-500/10 text-primary-400 border border-primary-500/20;
+}
+@utility status-success {
+  @apply status-chip bg-emerald-500/10 text-emerald-400 border border-emerald-500/20;
+}
+@utility status-warning {
+  @apply status-chip bg-amber-500/10 text-amber-400 border border-amber-500/20;
+}
+@utility status-danger {
+  @apply status-chip bg-red-500/10 text-red-400 border border-red-500/20;
+}
+
+/* Custom Utilities */
+@utility border-thicker {
+  border-width: 2px;
+}
+
+@utility bg-governance {
+  background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+}
+
+@utility glass-card {
+  @apply bg-dark-900/60 backdrop-blur-xl border border-white/5 rounded-xl shadow-2xl;
+}
+
+@utility glass-card-hover {
+  @apply hover:bg-dark-800/80 hover:border-primary-500/30 hover:shadow-primary-500/5 transition-all duration-300;
+}
