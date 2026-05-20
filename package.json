@@ -11,6 +11,8 @@
   "dependencies": {
     "@langchain/core": "^1.1.47",
     "@langchain/google-genai": "^2.1.31",
+    "@netlify/next": "^1.4.9",
+    "@netlify/plugin-nextjs": "^5.15.11",
     "axios": "^1.16.1",
     "next": "16.2.6",
     "react": "19.2.4",
