@@ -44,12 +44,12 @@ export default function LandingPage() {
             <div className="w-2 h-2 rounded-full bg-primary-500 shadow-md shadow-primary-500/50 animate-pulse" />
             Mock Interview
           </div>
-          <div className="px-4 py-3.5 rounded-xl text-dark-500 flex items-center gap-3 text-xs font-black uppercase tracking-wider hover:text-dark-300 hover:bg-dark-900/30 transition-all cursor-pointer">
+          {/* <div className="px-4 py-3.5 rounded-xl text-dark-500 flex items-center gap-3 text-xs font-black uppercase tracking-wider hover:text-dark-300 hover:bg-dark-900/30 transition-all cursor-pointer">
             <HiDatabase className="w-4 h-4" /> Past Interviews
-          </div>
-          <div className="px-4 py-3.5 rounded-xl text-dark-500 flex items-center gap-3 text-xs font-black uppercase tracking-wider hover:text-dark-300 hover:bg-dark-900/30 transition-all cursor-pointer">
+          </div> */}
+          {/* <div className="px-4 py-3.5 rounded-xl text-dark-500 flex items-center gap-3 text-xs font-black uppercase tracking-wider hover:text-dark-300 hover:bg-dark-900/30 transition-all cursor-pointer">
             <HiCog className="w-4 h-4" /> Prep Settings
-          </div>
+          </div> */}
         </nav>
 
         <div className="mt-auto pt-8 border-t border-dark-800/80 relative z-10">
