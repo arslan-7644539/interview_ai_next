@@ -116,7 +116,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 /* Custom scrollbar */
@@ -145,7 +145,7 @@ body {
   border-radius: 0.75rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   overflow: hidden;
-  transition: all 0.25s ease;
+  transition: all 0.15s ease;
 }
 
 @utility gov-card-interactive {
@@ -155,7 +155,7 @@ body {
 @utility gov-sidebar {
   @apply w-64 border-r border-dark-800 hidden md:flex flex-col p-6;
   background-color: var(--theme-sidebar-bg);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 @utility gradient-text {
@@ -204,7 +204,7 @@ body {
 
 @utility bg-governance {
   background: var(--theme-bg-radial);
-  transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.15s ease;
 }
 
 @utility glass-card {
@@ -214,9 +214,16 @@ body {
   border: 1px solid var(--theme-card-border);
   border-radius: 1rem;
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06), var(--theme-glass-card-glow);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @utility glass-card-hover {
   @apply hover:border-primary-500/30 hover:shadow-lg hover:shadow-primary-500/[0.02] hover:-translate-y-1;
+}
+
+/* Disable transitions during theme toggle */
+.no-transitions *,
+.no-transitions {
+  transition: none !important;
+  animation: none !important;
 }
