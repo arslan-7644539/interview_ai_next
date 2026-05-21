@@ -78,6 +78,23 @@ const techTerms = {
   'jvm': 'JVM', 'j v m': 'JVM', 'jdk': 'JDK',
   'spring boot': 'Spring Boot', 'spring framework': 'Spring Framework',
   'garbage collection': 'garbage collection', 'gc': 'GC',
+
+  // Pakistan & Category Specific
+  'b s c s': 'BSCS', 'bscs': 'BSCS',
+  'f y p': 'FYP', 'fyp': 'FYP',
+  'p m s': 'PMS', 'pms': 'PMS',
+  'c s s': 'CSS', 'css': 'CSS',
+  'h b l': 'HBL', 'hbl': 'HBL',
+  'u b l': 'UBL', 'ubl': 'UBL',
+  'meezan': 'Meezan Bank', 'meezan bank': 'Meezan Bank', 'mizan': 'Meezan Bank',
+  'bank alfalah': 'Bank Alfalah', 'alfalah': 'Bank Alfalah',
+  'quaid e azam': 'Quaid-e-Azam', 'quaid-e-azam': 'Quaid-e-Azam', 'quaid i azam': 'Quaid-e-Azam',
+  'c g p a': 'CGPA', 'cgpa': 'CGPA',
+  'final year project': 'Final Year Project',
+  'current account': 'current account', 'savings account': 'savings account',
+  'saving account': 'savings account', 'interest rate': 'interest rate',
+  'bureaucracy': 'bureaucracy', 'democracy': 'democracy', 'dictatorship': 'dictatorship',
+  'inflation': 'inflation', 'call center': 'call center', 'bpo': 'BPO', 'b p o': 'BPO',
 };
 
 /**

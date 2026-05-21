@@ -6,6 +6,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { HiMicrophone, HiStop, HiArrowRight, HiCheck, HiVolumeUp, HiSparkles, HiDatabase, HiTrendingUp } from 'react-icons/hi';
 import ThemeToggle from '@/components/ThemeToggle';
+import { normalizeTranscript } from '@/services/speechNormalizer';
 
 const API = '/api';
 
@@ -103,18 +104,34 @@ function VoiceInterviewPageContent() {
     if (!SR) return;
 
     const rec = new SR();
-    rec.continuous = true; rec.interimResults = true; rec.lang = 'en-US';
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = 'en-PK';
 
     const qId = questions[idx]?.id;
-    let final = answers[qId] || '';
+    const initialText = answers[qId] || '';
 
     rec.onresult = (e) => {
-      let interim = '';
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) final += ' ' + e.results[i][0].transcript;
-        else interim = e.results[i][0].transcript;
+      let sessionFinal = '';
+      let sessionInterim = '';
+      for (let i = 0; i < e.results.length; i++) {
+        const transcript = e.results[i][0].transcript;
+        if (e.results[i].isFinal) {
+          sessionFinal += ' ' + transcript;
+        } else {
+          sessionInterim += ' ' + transcript;
+        }
       }
-      setAnswers(p => ({ ...p, [qId]: (final + ' ' + interim).trim() }));
+
+      // Normalize phonetic/transcription errors on the fly
+      const cleanSessionFinal = normalizeTranscript(sessionFinal);
+      const cleanSessionInterim = normalizeTranscript(sessionInterim);
+
+      const combinedText = (initialText + ' ' + cleanSessionFinal + ' ' + cleanSessionInterim)
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      setAnswers(p => ({ ...p, [qId]: combinedText }));
     };
 
     rec.onerror = (e) => {
