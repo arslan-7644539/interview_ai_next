@@ -29,29 +29,24 @@ export const generateQuestions = async (topic, count = 5, difficulty = 'medium')
   try {
     const model = getModel(0.85);
 
-    const systemPrompt = `You are a Universal Professional Auditor and Domain Expert for: "${topic}".
-1. Pivot your entire logic, tone, and rigor to match this specific field.
-2. For POLICE: Focus on law, rights, ethics, and tactical reasoning.
-3. For CODING: Focus on logic, architecture, and technical depth.
-4. For OTHER: Access your internal training to act as a senior professional in THAT field.
+    const systemPrompt = `You are a friendly, natural Interviewer and Examiner conducting a mock interview for the role/field: "${topic}".
+RULES:
+1. Generate ONLY very basic, simple, and standard questions.
+2. DO NOT ask tricky questions, deep technical edge cases, or complex scenario problems.
+3. The questions should be suitable for a student or entry-level candidate in Pakistan.
+4. Focus on personal introduction, academic background/studies, Final Year Project (FYP) if applicable, and basic core concepts of "${topic}".
 
-DOMAIN CONTEXT & STANDARDS:
+DOMAIN CONTEXT & SAMPLE QUESTIONS:
 ${kb.context}`;
 
     const humanPrompt = `Generate exactly ${count} unique interview questions for: "${topic}"
-Difficulty: ${difficulty}
 
 Rules:
-- NEVER repeat core concepts; each question must test a different area.
-- AVOID generic "What is..." questions. Focus on practical/technical application.
-- If this is a specialized domain (e.g. Army, Medical, etc.), use the specific professional terminology of that field.
-- For ${difficulty} difficulty: ${{
-  easy: 'test standard protocols and key operational concepts',
-  medium: 'test application of knowledge in complex scenarios',
-  hard: 'test extreme edge cases and strategic tradeoffs'
-}[difficulty]}
-- Keep each question to 1-2 sentences maximum
-- expectedKeyPoints should contain 3-5 specific terms/concepts the answer MUST cover
+- The questions MUST be extremely basic, standard, and natural.
+- Start with a simple personal/study introduction or project question, then move to basic fundamental concepts of "${topic}".
+- DO NOT generate complex, long, or tricky questions.
+- Keep each question to 1 sentence, maximum 2 sentences.
+- expectedKeyPoints should contain 2-4 simple key terms or concepts the answer should cover.
 
 Respond in ONLY valid JSON:
 {
@@ -61,7 +56,7 @@ Respond in ONLY valid JSON:
       "question": "...",
       "category": "${topic}",
       "difficulty": "${difficulty}",
-      "expectedKeyPoints": ["point1", "point2", "point3"]
+      "expectedKeyPoints": ["point1", "point2"]
     }
   ]
 }`;
@@ -102,12 +97,12 @@ export const evaluateAnswer = async (question, answer, expectedKeyPoints = [], t
   try {
     const model = getModel(0.3);
 
-    const systemPrompt = `You are a Universal Professional Auditor and Examiner for: "${topic}".
-1. Pivot your evaluation criteria to match the highest standards of "${topic}".
-2. For POLICE: Grade strictly on legal compliance, situational ethics, and safety protocols.
-3. For CODING: Grade strictly on logic, performance, and technical accuracy.
-4. BE VOICE-AWARE: Technical terms may be phonetically transcribed. Be lenient on grammar, but EXTREMELY STRICT on professional facts and domain-specific terminology.
-5. IF THE CANDIDATE INDICATES LACK OF KNOWLEDGE ("I don't know", "no idea", "pass") OR LACK OF UNDERSTANDING / REQUESTS REPEAT: Assign a score of 0, set "isCorrect" to false, and set the feedback to acknowledge this directly (e.g. "Candidate indicated they do not know the answer or did not understand the question. A review of this topic is recommended."). Do not evaluate it as a bad attempt at a technical answer.
+    const systemPrompt = `You are a friendly and professional Interviewer evaluating answers for: "${topic}".
+1. Keep your feedback simple, natural, conversational, and direct (like a real human interviewer).
+2. DO NOT use generic boilerplate template phrases like "Solid answer demonstrating...", "Decent attempt...", "Good job starting...", or similar repetitive structures.
+3. React naturally to the content of the answer. State clearly whether the answer is good, bad/incorrect, or partially correct, and give a simple reason why in a warm, helpful tone.
+4. BE VOICE-AWARE: Since this is transcribed voice, ignore minor grammar errors or typos. Focus on the core meaning.
+5. IF THE CANDIDATE INDICATES LACK OF KNOWLEDGE ("I don't know", "no idea", "pass", "skip", etc.): Assign a score of 0, set "isCorrect" to false, and set the feedback to react naturally (e.g., "No problem, we can skip this question. Let's move on to the next one.").
 
 DOMAIN CONTEXT:
 ${kb ? kb.context : 'Access internal knowledge for ' + topic}`;
@@ -116,12 +111,12 @@ ${kb ? kb.context : 'Access internal knowledge for ' + topic}`;
 Expected key points: ${expectedKeyPoints.length > 0 ? expectedKeyPoints.join(', ') : 'N/A'}
 Candidate's answer (voice transcription): "${cleanAnswer}"
 
-Evaluate: accuracy, completeness, clarity, depth.
+Evaluate the answer.
 
 Respond in ONLY valid JSON:
 {
   "score": <0-10>,
-  "feedback": "<1-2 sentences specific constructive feedback>",
+  "feedback": "<Simple, natural, and direct conversational feedback. React directly to what the candidate said. State clearly if it is a good answer, bad/incorrect answer, or partially correct, and briefly say why in a friendly tone. Max 1-2 short sentences.>",
   "isCorrect": <true if score >= 6>
 }`;
 
@@ -213,32 +208,89 @@ Respond in ONLY valid JSON:
 // ====================================================
 
 const buildFallbackQuestions = (topic, count, difficulty) => {
-  const diffConfig = {
-    easy: { prefix: 'What is', depth: 'basic' },
-    medium: { prefix: 'Explain how', depth: 'detailed' },
-    hard: { prefix: 'Compare and analyze', depth: 'advanced' },
-  };
-  const d = diffConfig[difficulty] || diffConfig.medium;
+  const topicLower = topic.toLowerCase();
+  
+  let list = [];
+  if (topicLower.includes('software') || topicLower.includes('bscs')) {
+    list = [
+      "Tell me about yourself and why you chose Software Engineering.",
+      "What is the difference between Object-Oriented Programming (OOP) and Procedural Programming?",
+      "What is an API and how does it help software systems communicate?",
+      "Can you explain the difference between a DBMS and a File System?",
+      "What is inheritance in OOP and how do you use it?",
+      "What is the difference between a stack and a queue data structure?",
+      "Tell me about your final year project (FYP). What technologies did you use?",
+      "Why should we hire you and what are your strengths and weaknesses?"
+    ];
+  } else if (topicLower.includes('css') || topicLower.includes('pms') || topicLower.includes('government')) {
+    list = [
+      "Introduce yourself and share your educational background.",
+      "Why do you want to join the civil service of Pakistan?",
+      "What are the major problems that Pakistan is facing today?",
+      "How would you explain inflation and its impact on the public in simple terms?",
+      "What are the key leadership qualities of Quaid-e-Azam Muhammad Ali Jinnah?",
+      "What is bureaucracy and why is it important in governance?",
+      "What is the difference between democracy and dictatorship?"
+    ];
+  } else if (topicLower.includes('banking')) {
+    list = [
+      "Why do you want to start a career in the banking sector?",
+      "What is an interest rate in simple terms?",
+      "What is the difference between a current account and a savings account?",
+      "How would you handle an angry or demanding customer at the branch?",
+      "Why is teamwork important when working in a bank branch?",
+      "Why should we hire you for this bank job?"
+    ];
+  } else if (topicLower.includes('hr') || topicLower.includes('behavioral')) {
+    list = [
+      "Tell me about yourself.",
+      "Why do you want this job?",
+      "Where do you see yourself in 5 years?",
+      "Describe a challenge you faced and how you handled it.",
+      "Why did you leave your previous job (or why are you looking for a change)?",
+      "What are your weaknesses?",
+      "How do you handle work pressure and tight deadlines?"
+    ];
+  } else if (topicLower.includes('call center') || topicLower.includes('support')) {
+    list = [
+      "Can you comfortably communicate in English with international customers?",
+      "How will you deal with a customer who is being rude or shouting at you?",
+      "Why should we select you for this BPO customer support role?",
+      "Sell me this pen.",
+      "What does customer satisfaction mean to you?"
+    ];
+  } else if (topicLower.includes('teacher') || topicLower.includes('lecturer')) {
+    list = [
+      "Why do you want to become a teacher/lecturer?",
+      "What is your teaching methodology for engaging students?",
+      "How do you manage weak or slow students in your class?",
+      "What is the difference between education and learning?"
+    ];
+  } else if (topicLower.includes('fresh') || topicLower.includes('intern')) {
+    list = [
+      "Tell me about yourself and your academic achievements.",
+      "Explain your final year project (FYP) and what you built.",
+      "What programming technologies or software tools do you know?",
+      "Why should we select you as an intern?",
+      "What are your long-term career goals?"
+    ];
+  } else {
+    list = [
+      `Introduce yourself and tell me why you are interested in ${topic}.`,
+      `What are the basic fundamentals every professional should know about ${topic}?`,
+      `Can you share a simple example of how you apply ${topic} in real life?`,
+      `What are the most common challenges people face when working with ${topic}?`,
+      `What are your career goals related to ${topic}?`
+    ];
+  }
 
-  const patterns = [
-    `${d.prefix} ${topic} works and why is it important in the industry?`,
-    `What are the core principles or concepts behind ${topic}?`,
-    `Describe a real-world scenario where ${topic} would be critical.`,
-    `What are common mistakes or pitfalls when working with ${topic}?`,
-    `How would you explain the fundamentals of ${topic} to a colleague?`,
-    `What distinguishes an expert in ${topic} from a beginner?`,
-    `What are the latest trends or developments in ${topic}?`,
-    `How do you approach problem-solving within ${topic}?`,
-    `What tools, frameworks, or methodologies are commonly used in ${topic}?`,
-    `Describe a challenging situation related to ${topic} and how you'd solve it.`,
-    `What best practices should every professional know about ${topic}?`,
-    `How does ${topic} integrate with other technologies or disciplines?`,
-  ];
+  // Shuffle slightly but make sure the first question is always the introduction if available
+  const introQuestion = list.find(q => q.toLowerCase().includes('introduce') || q.toLowerCase().includes('about yourself') || q.toLowerCase().includes('career in'));
+  const remaining = list.filter(q => q !== introQuestion);
+  const shuffled = remaining.sort(() => Math.random() - 0.5);
+  const finalQuestions = introQuestion ? [introQuestion, ...shuffled] : shuffled;
 
-  // Shuffle for variety
-  const shuffled = patterns.sort(() => Math.random() - 0.5);
-
-  return shuffled.slice(0, count).map((q, i) => ({
+  return finalQuestions.slice(0, count).map((q, i) => ({
     id: i + 1,
     question: q,
     category: topic,
@@ -271,7 +323,7 @@ const fallbackEvaluate = (answer, keyPoints) => {
     return {
       score: 0,
       maxScore: 10,
-      feedback: "Candidate indicated they did not understand the question or requested clarification.",
+      feedback: "No problem! I can repeat it or we can skip. Let's move to the next question.",
       isCorrect: false
     };
   }
@@ -280,7 +332,7 @@ const fallbackEvaluate = (answer, keyPoints) => {
     return {
       score: 0,
       maxScore: 10,
-      feedback: "Candidate indicated they do not know the answer to this question.",
+      feedback: "No worries! It's okay not to know. Let's move on to the next question.",
       isCorrect: false
     };
   }
@@ -292,12 +344,17 @@ const fallbackEvaluate = (answer, keyPoints) => {
     const matches = keyPoints.filter(kp => answer.toLowerCase().includes(kp.toLowerCase())).length;
     score = Math.min(10, score + Math.round((matches / keyPoints.length) * 5));
   } else {
-    score = Math.min(10, score + (words > 30 ? 3 : words > 15 ? 2 : 0));
+    score = Math.min(10, score + (words > 25 ? 3 : words > 12 ? 2 : 0));
   }
 
-  const feedback = score >= 7 ? 'Solid answer demonstrating good understanding.'
-    : score >= 4 ? 'Decent attempt — try to be more specific and detailed.'
-    : 'Answer needs significant improvement. Cover key concepts.';
+  let feedback = '';
+  if (score >= 8) {
+    feedback = "Good answer! You explained the concept clearly and hit the main points.";
+  } else if (score >= 5) {
+    feedback = "That is a decent explanation, but it is a bit brief. Try to add a bit more details.";
+  } else {
+    feedback = "This answer is very short and doesn't explain the concept. Try to elaborate more next time.";
+  }
 
   return { score, maxScore: 10, feedback, isCorrect: score >= 6 };
 };

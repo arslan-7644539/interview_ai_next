@@ -6,133 +6,98 @@
  */
 
 const knowledgeBase = {
-  'javascript': {
-    context: `JavaScript is a dynamic, interpreted programming language. Key interview topics include:
-closures, prototypal inheritance, event loop, promises/async-await, hoisting, scope chain,
-this keyword binding, arrow functions vs regular, ES6+ features (destructuring, spread, modules),
-DOM manipulation, event delegation, debounce/throttle, Web APIs, memory leaks, garbage collection,
-WeakMap/WeakSet, generators, iterators, Proxy/Reflect, module patterns, IIFE, currying, memoization.
-Common coding patterns: factory functions, observer pattern, pub-sub, middleware pattern.`,
-    questionTypes: ['conceptual', 'code-output', 'debugging', 'design-pattern', 'optimization'],
+  'software engineer / bscs': {
+    context: `Software Engineer / BSCS entry-level interviews in Pakistan.
+Focus ONLY on very basic questions about the candidate, their studies, and core programming fundamentals.
+Ask simple questions such as:
+- Tell me about yourself.
+- Tell me about your studies and your Final Year Project (FYP).
+- What is the difference between Object-Oriented Programming (OOP) and Procedural Programming?
+- What is an API and why is it used?
+- Explain the basic difference between a DBMS and a File System.
+- What is inheritance in OOP?
+- What is the difference between a stack and a queue?
+- Why should we hire you?
+- What are your strengths and weaknesses?
+Do NOT ask complex coding puzzles, tricky algorithms, system design, or advanced system scenarios. Keep it very simple and friendly.`,
+    questionTypes: ['introduction', 'academic', 'basic-oop', 'basic-dbms', 'basic-dsa', 'behavioral'],
   },
-  'react': {
-    context: `React is a component-based UI library. Key interview topics include:
-Virtual DOM reconciliation (diffing algorithm), hooks (useState, useEffect, useMemo, useCallback, useRef, useReducer, useId),
-useRef for DOM access, referencing elements, and persisting values without re-renders, forwardRef for passing refs to children,
-useImperativeHandle for customizing the instance value that is exposed to parent components when using ref,
-component lifecycle in functional vs class components, controlled vs uncontrolled components,
-React.memo and useMemo for performance optimization, Context API for global state vs prop drilling,
-React fiber architecture, concurrent rendering features, suspense for data fetching, error boundaries, portals,
-custom hooks patterns, state management (Redux Toolkit, Zustand, Jotai, Recoil), server components vs client components,
-hydration process, code splitting (React.lazy, dynamic imports), key prop importance in lists, synthetic events system,
-higher-order components (HOCs), render props pattern, compound components, controlled inputs vs uncontrolled inputs.`,
-    questionTypes: ['conceptual', 'hooks', 'performance', 'architecture', 'state-management', 'patterns'],
+  'css / pms / government': {
+    context: `CSS / PMS / Government Job interviews in Pakistan.
+Focus ONLY on basic personal introduction, basic current affairs, and common knowledge about Pakistan.
+Ask simple questions such as:
+- Introduce yourself.
+- Why do you want to join the civil service of Pakistan?
+- What are the major problems of Pakistan today?
+- How would you explain inflation in simple terms?
+- What were the key leadership qualities of Quaid-e-Azam Muhammad Ali Jinnah?
+- What is bureaucracy in simple words?
+- What is the basic difference between democracy and dictatorship?
+- Share your view on recent simple current affairs of Pakistan.
+Do NOT ask complex administrative case studies or deep international law topics. Keep it basic, general, and conversational.`,
+    questionTypes: ['introduction', 'motivation', 'pakistan-problems', 'basic-economics', 'leadership', 'basic-governance'],
   },
-  'node': {
-    context: `Node.js is a server-side JavaScript runtime. Key interview topics include:
-event loop (libuv), non-blocking I/O, streams (readable, writable, transform, duplex),
-cluster module, worker threads, child processes, Express middleware pipeline,
-error handling patterns, authentication (JWT, OAuth), REST API design, GraphQL,
-database integration (MongoDB/Mongoose, PostgreSQL/Sequelize), caching strategies (Redis),
-rate limiting, security (CORS, helmet, input sanitization, SQL injection prevention),
-microservices communication, message queues (RabbitMQ, Bull), PM2 process management,
-environment variables, logging (Winston, Morgan), testing (Jest, Supertest).`,
-    questionTypes: ['conceptual', 'architecture', 'security', 'performance', 'debugging'],
+  'banking job': {
+    context: `Banking job interviews in Pakistan (e.g. Meezan Bank, HBL, Bank Alfalah, UBL, etc.).
+Focus ONLY on basic banking concepts, motivation, customer handling, and simple teamwork.
+Ask simple questions such as:
+- Why do you want to join the banking sector?
+- What is an interest rate in simple words?
+- What is the difference between a current account and a savings account?
+- How will you handle an angry customer at the bank branch?
+- What is teamwork and why is it important in a bank?
+- Why should we hire you?
+Do NOT ask complex finance math, investment banking valuation models, or advanced risk regulations. Keep it highly practical, basic, and conversational.`,
+    questionTypes: ['motivation', 'basic-banking', 'customer-handling', 'teamwork', 'suitability'],
   },
-  'python': {
-    context: `Python is a versatile programming language. Key interview topics include:
-GIL (Global Interpreter Lock), generators/iterators, decorators, context managers,
-list comprehensions, duck typing, multiple inheritance (MRO), metaclasses,
-asyncio/coroutines, data classes, type hints, slots, descriptors,
-collections module (defaultdict, Counter, deque, OrderedDict),
-popular frameworks (Django, Flask, FastAPI), testing (pytest, unittest),
-OOP principles, design patterns, memory management, garbage collection,
-web scraping (BeautifulSoup, Scrapy), data processing (pandas, numpy).`,
-    questionTypes: ['conceptual', 'code-output', 'pythonic-patterns', 'libraries', 'optimization'],
+  'hr interview': {
+    context: `HR (Human Resources) interview category.
+Focus ONLY on basic personal behavioral and self-reflection questions.
+Ask simple questions such as:
+- Tell me about yourself.
+- Why do you want this job?
+- Where do you see yourself in 5 years?
+- Describe a simple challenge you faced and how you solved it.
+- Why did you leave your previous job (or why are you looking for a change)?
+- What are your weaknesses?
+- How do you handle pressure and tight deadlines?
+Do NOT ask complex stress-test scenarios or advanced HR policy frameworks. Keep it friendly and standard.`,
+    questionTypes: ['introduction', 'motivation', 'career-goals', 'behavioral-scenario', 'self-awareness', 'stress-handling'],
   },
-  'data structures': {
-    context: `Data Structures & Algorithms topics for interviews include:
-Arrays, Linked Lists (singly, doubly, circular), Stacks, Queues (priority, deque),
-Trees (BST, AVL, Red-Black, B-Tree, Trie, Segment Tree), Heaps (min/max),
-Graphs (BFS, DFS, Dijkstra, Bellman-Ford, Floyd-Warshall, topological sort),
-Hash Tables (collision handling, load factor), Sorting (merge, quick, heap, radix),
-Dynamic Programming (memoization, tabulation), Greedy algorithms,
-Divide and Conquer, Backtracking, Sliding Window, Two Pointers,
-Time/Space complexity analysis (Big O), amortized analysis.`,
-    questionTypes: ['conceptual', 'problem-solving', 'complexity-analysis', 'algorithm-design', 'tradeoffs'],
+  'call center / support': {
+    context: `Call Center and Customer Support interviews in Pakistan.
+Focus ONLY on basic communication skills, dealing with rude customers, and basic customer satisfaction metrics.
+Ask simple questions such as:
+- Can you comfortably communicate in English? (Introduce yourself in English).
+- How will you deal with a customer who is being rude or shouting at you?
+- Why should we select you for this call center role?
+- Sell me this pen (basic persuasive/sales exercise).
+- What is customer satisfaction in your own words?
+Do NOT ask complex technical support troubleshooting, SLA contracts, or advanced CRM systems. Keep it very conversational and test basic communication.`,
+    questionTypes: ['english-check', 'de-escalation', 'sales-pitch', 'satisfaction-concept', 'motivation'],
   },
-  'system design': {
-    context: `System Design interview topics include:
-Scalability (horizontal vs vertical), Load Balancing (L4/L7, algorithms),
-Caching (CDN, Redis, Memcached, cache invalidation strategies),
-Database design (SQL vs NoSQL, sharding, replication, partitioning, CAP theorem),
-Message Queues (Kafka, RabbitMQ, SQS), Microservices vs Monolith,
-API design (REST, GraphQL, gRPC, WebSockets), Rate Limiting,
-Consistent Hashing, Bloom Filters, Event-Driven Architecture,
-Real-world systems: URL shortener, chat system, social media feed,
-notification system, payment system, video streaming, search engine.`,
-    questionTypes: ['design', 'tradeoffs', 'scalability', 'estimation', 'component-deep-dive'],
+  'teacher / lecturer': {
+    context: `Teacher or Lecturer interviews in Pakistan.
+Focus ONLY on basic teaching passion, methodology, classroom management, and simple concepts.
+Ask simple questions such as:
+- Why do you want to become a teacher/lecturer?
+- What is your basic teaching methodology?
+- How do you manage weak or slow students in your class?
+- What is the difference between education and learning?
+Do NOT ask complex educational policy structures, advanced educational research methodology, or deep curriculum design theory. Keep it simple and focused on classroom basics.`,
+    questionTypes: ['motivation', 'methodology', 'classroom-basics', 'education-philosophy'],
   },
-  'sql': {
-    context: `SQL & Database interview topics include:
-SELECT queries (JOINs, GROUP BY, HAVING, subqueries, CTEs, window functions),
-Normalization (1NF-BCNF), Indexing (B-Tree, Hash, composite, covering),
-Transactions (ACID properties), Isolation levels, Deadlocks,
-Query optimization (EXPLAIN, query plans), Stored procedures, Views,
-NoSQL concepts (document, key-value, column-family, graph databases),
-Database replication, sharding strategies, connection pooling,
-ORM patterns (Active Record, Data Mapper), migrations.`,
-    questionTypes: ['query-writing', 'optimization', 'design', 'conceptual', 'troubleshooting'],
-  },
-  'java': {
-    context: `Java interview topics include:
-OOP principles (encapsulation, inheritance, polymorphism, abstraction),
-JVM internals (class loading, garbage collection algorithms, memory model),
-Collections framework (List, Set, Map, Queue implementations),
-Generics, Annotations, Reflection, Streams API, Lambda expressions,
-Concurrency (threads, synchronization, ExecutorService, CompletableFuture),
-Design patterns (Singleton, Factory, Builder, Observer, Strategy),
-Spring framework (IoC, DI, AOP, Spring Boot, Spring Security),
-Exception handling best practices, Serialization, Memory leaks.`,
-    questionTypes: ['conceptual', 'code-output', 'design-patterns', 'concurrency', 'jvm-internals'],
-  },
-  'law enforcement': {
-    context: `Police/Law Enforcement exam and interview topics include:
-Criminal law (Miranda rights, search and seizure, use of force protocols, probable cause),
-Community policing strategies, conflict de-escalation techniques,
-Crisis intervention, report writing accuracy, ethical decision-making,
-Physical fitness standards, situational awareness, tactical reasoning,
-Knowledge of local statutes, radio protocols, and chain of command.`,
-    questionTypes: ['situational', 'legal-knowledge', 'ethical-dilemma', 'operational-protocol'],
-  },
-  'medical': {
-    context: `Medical and Nursing interview topics include:
-Clinical knowledge (pathophysiology, pharmacology, dosage calculations),
-Patient care protocols, bedside manner, triage prioritization,
-HIPAA and patient privacy, emergency response (ACLS/BLS),
-Interdisciplinary communication, ethical scenarios (end-of-life care, informed consent),
-Clinical reasoning and diagnostic processes.`,
-    questionTypes: ['clinical-scenario', 'pharmacology', 'ethical', 'prioritization'],
-  },
-  'finance': {
-    context: `Finance and Investment Banking interview topics include:
-Financial modeling (DCF, LBO, comparable company analysis),
-Accounting principles (3-statement linking, revenue recognition),
-Valuation methodologies, market trends, M&A logic, capital structures,
-Risk management, financial ratios (ROE, ROA, Debt/Equity),
-Regulatory compliance (SEC, FINRA).`,
-    questionTypes: ['quantitative', 'analytical', 'market-aware', 'valuation'],
-  },
-  'behavioral': {
-    context: `Behavioral/HR interview topics assessed via STAR method:
-Leadership (leading projects, mentoring, decision-making under pressure),
-Teamwork (conflict resolution, collaboration, cross-functional work),
-Problem-solving (debugging complex issues, creative solutions, learning from failure),
-Communication (explaining technical concepts, stakeholder management),
-Adaptability (handling changing requirements, learning new technologies),
-Time management (prioritization, meeting deadlines, handling multiple projects),
-Career goals, motivation, culture fit, handling feedback, work-life balance.`,
-    questionTypes: ['scenario', 'experience-based', 'situational', 'self-reflection', 'culture-fit'],
+  'fresh graduate / intern': {
+    context: `Fresh Graduate or Internship interviews in Pakistan.
+Focus ONLY on basic academic achievements, Final Year Project (FYP), technologies known, and career goals.
+Ask simple questions such as:
+- Tell me about yourself.
+- Explain your Final Year Project (FYP) in simple words.
+- What programming technologies or tools do you know?
+- Why should we select you as an intern?
+- What are your career goals?
+Do NOT ask advanced enterprise software architecture, lead-level tradeoffs, or deep system design. Keep it basic and encouraging.`,
+    questionTypes: ['introduction', 'fyp', 'skills', 'motivation', 'career-goals'],
   },
 };
 
@@ -141,18 +106,13 @@ export const getRelevantContext = (topic) => {
 
   // Keyword mapping for broader discovery
   const mapping = {
-    'javascript': ['js', 'ecmascript', 'typescript', 'frontend web'],
-    'react': ['react', 'redux', 'next.js', 'ui library'],
-    'node': ['node', 'express', 'backend', 'server-side'],
-    'python': ['python', 'django', 'flask', 'data science'],
-    'data structures': ['dsa', 'algorithm', 'coding test'],
-    'system design': ['architecture', 'scalability', 'distributed systems'],
-    'sql': ['database', 'mysql', 'postgres', 'query'],
-    'java': ['java', 'spring', 'jvm', 'android'],
-    'law enforcement': ['police', 'army', 'military', 'security', 'enforcement', 'officer'],
-    'medical': ['nursing', 'doctor', 'hospital', 'clinical', 'medicine'],
-    'finance': ['accounting', 'bank', 'investment', 'stock', 'economic'],
-    'behavioral': ['hr', 'soft skill', 'culture', 'management'],
+    'software engineer / bscs': ['software', 'bscs', 'coding', 'oop', 'computer science', 'it job'],
+    'css / pms / government': ['css', 'pms', 'government', 'civil service', 'bureaucracy', 'dictatorship'],
+    'banking job': ['banking', 'bank', 'meezan', 'hbl', 'alfalah', 'ubl', 'current account'],
+    'hr interview': ['hr', 'behavioral', 'strengths', 'weaknesses', 'human resources'],
+    'call center / support': ['call center', 'customer support', 'customer satisfaction', 'support', 'rude customer'],
+    'teacher / lecturer': ['teacher', 'lecturer', 'teaching', 'pedagogy', 'education'],
+    'fresh graduate / intern': ['fresh graduate', 'internship', 'intern', 'fyp'],
   };
 
   for (const [key, aliases] of Object.entries(mapping)) {
@@ -164,10 +124,10 @@ export const getRelevantContext = (topic) => {
   // Universal Handler: Tells AI to generate its own RAG-like context from internal memory
   return {
     context: `UNIVERSAL AUDITOR MODE: The topic is "${topic}".
-1. Access your internal database for "${topic}" professional standards.
-2. Identify the core competencies required for a professional in this field.
-3. Use specialized terminology and high-stakes scenarios specific to "${topic}".
-4. Evaluate based on the highest industry standards for "${topic}".`,
-    questionTypes: ['field-specific', 'situational', 'technical-depth', 'operational-mastery'],
+1. Focus ONLY on very basic questions about the candidate, their motivation, and simple fundamentals of "${topic}".
+2. Ask direct, straightforward, and non-tricky questions.
+3. Start with simple introductions and then basic concepts.`,
+    questionTypes: ['field-specific', 'basic-concepts', 'introduction'],
   };
 };
+

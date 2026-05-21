@@ -6,12 +6,13 @@ import { HiMicrophone, HiArrowRight, HiCog, HiDatabase, HiCollection, HiLightnin
 import ThemeToggle from '@/components/ThemeToggle';
 
 const topics = [
-  { label: 'Software Engineer', icon: '💻', desc: 'Coding, system design, DSA, web technologies, and database architecture.' },
-  { label: 'Teaching & Pedagogy', icon: '🏫', desc: 'Classroom management, learning theories, curriculum design, and student engagement.' },
-  { label: 'Medical (Doctor)', icon: '🩺', desc: 'Clinical diagnostics, patient care ethics, anatomy, and general medical knowledge.' },
-  { label: 'Military (Army)', icon: '🎖️', desc: 'Leadership under pressure, situational tactics, physical endurance, and discipline.' },
-  { label: 'Civil Service (CSS Exam)', icon: '⚖️', desc: 'Public administration, governance, international relations, ethics, and essay structure.' },
-  { label: 'HR & Behavioral', icon: '🤝', desc: 'STAR method behavioral questions, situational leadership, empathy, and workplace ethics.' },
+  { label: 'Software Engineer / BSCS', icon: '💻', desc: 'Personal introduction, Final Year Project (FYP), basic OOP, APIs, DBMS, and DSA fundamentals.' },
+  { label: 'CSS / PMS / Government', icon: '⚖️', desc: 'Civil service introduction, major Pakistan problems, simple inflation, democracy, and Jinnah.' },
+  { label: 'Banking Job', icon: '🏦', desc: 'Meezan, HBL, UBL branches. Interest rates, current vs savings accounts, and branch teamwork.' },
+  { label: 'HR Interview', icon: '🤝', desc: 'Tell me about yourself, strengths and weaknesses, 5-year career goals, and pressure handling.' },
+  { label: 'Call Center / Support', icon: '📞', desc: 'English communication check, handling rude customers, customer satisfaction, and sales.' },
+  { label: 'Teacher / Lecturer', icon: '🏫', desc: 'Teaching methodology, managing weak students in class, and difference between education and learning.' },
+  { label: 'Fresh Graduate / Intern', icon: '🎓', desc: 'Academic background, Final Year Project (FYP), programming tools known, and internship goals.' },
 ];
 
 export default function LandingPage() {
