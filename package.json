@@ -13,12 +13,14 @@
     "@langchain/google-genai": "^2.1.31",
     "@netlify/next": "^1.4.9",
     "@netlify/plugin-nextjs": "^5.15.11",
+    "@reduxjs/toolkit": "^2.12.0",
     "axios": "^1.16.1",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hot-toast": "^2.6.0",
-    "react-icons": "^5.6.0"
+    "react-icons": "^5.6.0",
+    "react-redux": "^9.3.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

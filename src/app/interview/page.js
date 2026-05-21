@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { HiMicrophone, HiStop, HiArrowRight, HiCheck, HiVolumeUp, HiSparkles, HiDatabase, HiTrendingUp } from 'react-icons/hi';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const API = '/api';
 
@@ -184,7 +185,7 @@ function VoiceInterviewPageContent() {
   // ---- Loading View ----
   if (phase === 'loading') {
     return (
-      <div className="min-h-screen bg-dark-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-governance flex flex-col items-center justify-center p-6 relative overflow-hidden text-dark-100">
         {/* Futuristic glowing backdrops */}
         <div className="absolute inset-0 bg-primary-600/[0.03] blur-[150px] rounded-full pointer-events-none animate-pulse-slow" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-500/[0.02] blur-[100px] rounded-full pointer-events-none" />
@@ -192,10 +193,10 @@ function VoiceInterviewPageContent() {
         <div className="relative z-10 text-center max-w-md w-full glass-card p-10 border border-dark-800/80 shadow-2xl">
           {/* Animated floating icon */}
           <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center mx-auto mb-8 animate-bounce-slow shadow-xl shadow-primary-500/20">
-            <HiMicrophone className="w-10 h-10 text-white" />
+            <HiMicrophone className="w-10 h-10 text-always-white" />
           </div>
           
-          <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Preparing Mock Questions</h2>
+          <h2 className="text-2xl font-black text-dark-100 mb-2 tracking-tight">Preparing Mock Questions</h2>
           <p className="text-dark-400 text-sm mb-6">Creating mock interview questions tailored to your field...</p>
           
           <div className="flex items-center justify-center gap-2 mb-8">
@@ -227,7 +228,7 @@ function VoiceInterviewPageContent() {
   // ---- Finishing View ----
   if (phase === 'finishing') {
     return (
-      <div className="min-h-screen bg-dark-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-governance flex flex-col items-center justify-center p-6 relative overflow-hidden text-dark-100">
         <div className="absolute inset-0 bg-indigo-600/[0.03] blur-[150px] rounded-full pointer-events-none animate-pulse-slow" />
         
         <div className="relative z-10 text-center max-w-md w-full glass-card p-10 border border-dark-800/80 shadow-2xl">
@@ -239,7 +240,7 @@ function VoiceInterviewPageContent() {
             </div>
           </div>
           
-          <h2 className="text-2xl font-black text-white mb-2 tracking-tight animate-pulse">Analyzing Performance</h2>
+          <h2 className="text-2xl font-black text-dark-100 mb-2 tracking-tight animate-pulse">Analyzing Performance</h2>
           <p className="text-dark-500 text-xs font-black uppercase tracking-widest">Generating Interview Report Card...</p>
         </div>
       </div>
@@ -261,7 +262,7 @@ function VoiceInterviewPageContent() {
           <div className="space-y-3">
             <div className="glass-card p-4 border-dark-800 bg-dark-900/40">
               <span className="block text-[8px] font-black text-dark-500 uppercase tracking-widest mb-1">Target Topic</span>
-              <span className="text-xs font-bold text-white">{topic}</span>
+              <span className="text-xs font-bold text-dark-100">{topic}</span>
             </div>
             <div className="glass-card p-4 border-dark-800 bg-dark-900/40">
               <span className="block text-[8px] font-black text-dark-500 uppercase tracking-widest mb-1">Career Level</span>
@@ -303,10 +304,11 @@ function VoiceInterviewPageContent() {
           </div>
         </div>
 
-        <div className="mt-auto pt-6 border-t border-dark-800/80 relative z-10">
-          <div className="status-active w-full justify-center text-[9px] font-black tracking-widest">
-             AI Interviewer Active
+        <div className="mt-auto pt-6 border-t border-dark-800/80 relative z-10 flex items-center justify-between gap-4">
+          <div className="status-active py-1 px-2.5 text-[9px] font-black tracking-widest">
+             AI Active
           </div>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -318,24 +320,30 @@ function VoiceInterviewPageContent() {
         <div className="xl:hidden flex items-center justify-between mb-8 pb-4 border-b border-dark-800">
            <div className="flex flex-col">
               <span className="text-[9px] font-black text-dark-500 uppercase tracking-widest">{topic}</span>
-              <span className="text-sm font-black text-white">Round 0{idx + 1} of 0{totalQ}</span>
+              <span className="text-sm font-black text-dark-100">Round 0{idx + 1} of 0{totalQ}</span>
            </div>
-           <div className="status-active py-1 px-2 text-[9px]">Active Practice</div>
+           <div className="flex items-center gap-3">
+             <ThemeToggle />
+             <div className="status-active py-1 px-2 text-[9px]">Active Practice</div>
+           </div>
         </div>
 
         <div className="max-w-4xl mx-auto w-full relative z-10 flex-1 flex flex-col justify-center">
           {/* Header (Desktop Only) */}
           <div className="hidden xl:flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-dark-900 to-dark-950 border border-dark-800 flex items-center justify-center text-white text-xs font-black shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-dark-900 to-dark-950 border border-dark-800 flex items-center justify-center text-dark-100 text-xs font-black shadow-md">
                 0{idx + 1}
               </div>
-              <h2 className="text-md font-black text-white uppercase tracking-wider">Practice Session</h2>
+              <h2 className="text-md font-black text-dark-100 uppercase tracking-wider">Practice Session</h2>
             </div>
-            <div className="text-right">
-              <div className="text-[9px] font-black text-dark-500 uppercase tracking-widest mb-1.5">Interview Progress</div>
-              <div className="w-48 h-1.5 bg-dark-900 border border-dark-800/80 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-primary-600 to-indigo-500 transition-all duration-700" style={{ width: `${((idx + 1) / totalQ) * 100}%` }} />
+            <div className="flex items-center gap-6">
+              <ThemeToggle />
+              <div className="text-right">
+                <div className="text-[9px] font-black text-dark-500 uppercase tracking-widest mb-1.5">Interview Progress</div>
+                <div className="w-48 h-1.5 bg-dark-900 border border-dark-800/80 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-primary-600 to-indigo-500 transition-all duration-700" style={{ width: `${((idx + 1) / totalQ) * 100}%` }} />
+                </div>
               </div>
             </div>
           </div>
@@ -394,14 +402,14 @@ function VoiceInterviewPageContent() {
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-8 sm:mb-10">
               <div className="flex-1">
                 <span className="status-active mb-3.5 text-[9px] font-black tracking-widest">Interviewer Question</span>
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-relaxed">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-dark-100 leading-relaxed">
                   {q?.question}
                 </h1>
               </div>
               <button 
                 onClick={() => speak(`${q?.question}`)} 
                 type="button"
-                className="p-3.5 rounded-xl bg-dark-800 border border-dark-700/50 hover:bg-dark-700/80 hover:border-dark-600 text-dark-300 hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                className="p-3.5 rounded-xl bg-dark-800 border border-dark-700/50 hover:bg-dark-700/80 hover:border-dark-600 text-dark-300 hover:text-dark-100 transition-all cursor-pointer shadow-sm active:scale-95"
                 title="Speak Question"
               >
                 <HiVolumeUp className="w-5 h-5" />
@@ -422,8 +430,8 @@ function VoiceInterviewPageContent() {
                     type="button"
                     className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 border cursor-pointer relative z-10 ${
                       isRecording 
-                        ? 'bg-gradient-to-r from-red-500 to-rose-600 border-red-500 text-white animate-glow-pulse-red shadow-lg shadow-red-500/20 scale-[1.03]' 
-                        : 'bg-dark-950/60 border-dark-800 text-dark-400 hover:text-white hover:border-dark-600 hover:bg-dark-900'
+                        ? 'bg-gradient-to-r from-red-500 to-rose-600 border-red-500 text-always-white animate-glow-pulse-red shadow-lg shadow-red-500/20 scale-[1.03]' 
+                        : 'bg-dark-950/60 border-dark-800 text-dark-400 hover:text-dark-100 hover:border-dark-600 hover:bg-dark-900'
                     }`}
                   >
                     {isRecording ? <HiStop className="w-6 h-6 animate-pulse" /> : <HiMicrophone className="w-6 h-6" />}
@@ -458,7 +466,7 @@ function VoiceInterviewPageContent() {
                    <textarea
                     value={currentAns}
                     onChange={(e) => setAnswers(p => ({ ...p, [q.id]: e.target.value }))}
-                    className="w-full h-full bg-transparent border-none focus:ring-0 text-white placeholder-dark-600 resize-none text-xs font-semibold leading-relaxed outline-none"
+                    className="w-full h-full bg-transparent border-none focus:ring-0 text-dark-100 placeholder-dark-600 resize-none text-xs font-semibold leading-relaxed outline-none"
                     placeholder="Your spoken response will be transcribed here. Click the mic to speak or type your answer directly..."
                   />
                 </div>
@@ -510,7 +518,7 @@ function VoiceInterviewPageContent() {
                   </span>
                 </div>
                 
-                <div className="text-lg font-black text-white">
+                <div className="text-lg font-black text-dark-100">
                   {feedback.score}
                   <span className="text-[10px] text-dark-600 ml-1">/10</span>
                 </div>
@@ -573,9 +581,9 @@ function VoiceInterviewPageContent() {
 export default function VoiceInterviewPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-dark-950 flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-governance flex flex-col items-center justify-center p-6 text-center text-dark-100">
         <div className="w-12 h-12 border-4 border-white/5 border-t-primary-500 rounded-full animate-spin mb-4" />
-        <h2 className="text-lg font-black text-white tracking-tight">Loading Mock Session...</h2>
+        <h2 className="text-lg font-black text-dark-100 tracking-tight">Loading Mock Session...</h2>
       </div>
     }>
       <VoiceInterviewPageContent />

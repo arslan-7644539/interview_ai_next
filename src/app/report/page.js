@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { HiRefresh, HiCheckCircle, HiExclamationCircle, HiLightBulb, HiShieldCheck } from 'react-icons/hi';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function ReportPage() {
   const router = useRouter();
@@ -25,10 +26,10 @@ export default function ReportPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-dark-950 flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen bg-governance flex items-center justify-center relative overflow-hidden text-dark-100">
         <div className="absolute inset-0 bg-primary-600/[0.02] blur-[120px] rounded-full pointer-events-none" />
         <div className="text-center relative z-10">
-          <div className="w-12 h-12 border-4 border-white/5 border-t-primary-500 rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-12 h-12 border-4 border-dark-300/10 border-t-primary-500 rounded-full animate-spin mx-auto mb-4" />
           <p className="text-dark-400 text-sm font-semibold">Generating Performance Report...</p>
         </div>
       </div>
@@ -37,7 +38,7 @@ export default function ReportPage() {
 
   if (!r) {
     return (
-      <div className="min-h-screen bg-dark-950 flex items-center justify-center">
+      <div className="min-h-screen bg-governance flex items-center justify-center text-dark-100">
         <div className="text-center glass-card p-8 border-dark-800 max-w-sm">
           <p className="text-dark-400 mb-4 font-bold">No mock interview records found.</p>
           <button 
@@ -60,9 +61,9 @@ export default function ReportPage() {
         
         <div className="flex items-center gap-3 mb-12 relative z-10">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-950/40">
-             <HiCheckCircle className="w-6 h-6 text-white" />
+             <HiCheckCircle className="w-6 h-6 text-always-white" />
           </div>
-          <span className="text-lg font-black tracking-tight text-white uppercase bg-gradient-to-r from-white to-dark-300 bg-clip-text text-transparent">
+          <span className="text-lg font-black tracking-tight text-dark-100 uppercase bg-gradient-to-r from-dark-100 to-dark-300 bg-clip-text text-transparent">
             Report Cards
           </span>
         </div>
@@ -80,9 +81,12 @@ export default function ReportPage() {
           </button>
         </nav>
 
-        <div className="mt-auto pt-8 border-t border-dark-800/80 relative z-10">
-          <p className="text-[9px] font-black text-dark-600 uppercase tracking-widest mb-1.5">Practice Portal</p>
-          <p className="text-xs font-bold text-dark-400">Gemini Interview Prep v3.5</p>
+        <div className="mt-auto pt-8 border-t border-dark-800/80 relative z-10 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[9px] font-black text-dark-600 uppercase tracking-widest mb-1.5">Practice Portal</p>
+            <p className="text-xs font-bold text-dark-400">Gemini Prep v3.5</p>
+          </div>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -94,28 +98,34 @@ export default function ReportPage() {
         <div className="lg:hidden flex items-center justify-between mb-8 pb-4 border-b border-b-dark-800">
            <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
-                <HiCheckCircle className="w-4 h-4 text-white" />
+                <HiCheckCircle className="w-4 h-4 text-always-white" />
               </div>
-              <span className="text-sm font-black text-white uppercase tracking-tighter">Performance Report</span>
+              <span className="text-sm font-black text-dark-100 uppercase tracking-tighter">Performance Report</span>
            </div>
-           <div className="status-success py-1 px-2.5 text-[9px] font-bold">Done</div>
+           <div className="flex items-center gap-3">
+             <ThemeToggle />
+             <div className="status-success py-1 px-2.5 text-[9px] font-bold">Done</div>
+           </div>
         </div>
 
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 relative z-10">
           <div>
             <span className="status-success mb-3 text-[9px] font-black tracking-widest">Mock Interview Completed</span>
-            <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-dark-100 leading-tight">
               Performance Report Card
             </h1>
             <p className="text-dark-400 text-sm font-medium">{r.topic} • Job Interview Preparation Review</p>
           </div>
-          <button 
-            onClick={() => router.push('/')} 
-            type="button"
-            className="btn-gov-secondary text-xs flex items-center gap-2 self-start cursor-pointer active:scale-95 shadow-sm"
-          >
-            <HiRefresh className="w-4 h-4" /> Restart Session
-          </button>
+          <div className="flex items-center gap-4 self-start">
+            <ThemeToggle />
+            <button 
+              onClick={() => router.push('/')} 
+              type="button"
+              className="btn-gov-secondary text-xs flex items-center gap-2 cursor-pointer active:scale-95 shadow-sm"
+            >
+              <HiRefresh className="w-4 h-4" /> Restart Session
+            </button>
+          </div>
         </header>
 
         <div className="space-y-8 max-w-6xl relative z-10">
@@ -124,7 +134,7 @@ export default function ReportPage() {
             {/* Grade Card */}
             <div className="p-6 sm:p-8 text-center flex flex-col items-center justify-center">
               <span className="block text-[9px] font-black text-dark-500 uppercase tracking-widest mb-4">Interview Grade</span>
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 text-3xl font-black text-white shadow-lg shadow-emerald-500/10 animate-pulse">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 text-3xl font-black text-emerald-600 dark:text-always-white shadow-lg shadow-emerald-500/10 animate-pulse">
                 {r.overallGrade}
               </div>
             </div>
@@ -138,7 +148,7 @@ export default function ReportPage() {
                     cx="40"
                     cy="40"
                     r="32"
-                    className="text-dark-950"
+                    className="text-dark-800/80"
                     strokeWidth="4"
                     stroke="currentColor"
                     fill="transparent"
@@ -157,7 +167,7 @@ export default function ReportPage() {
                   />
                 </svg>
                 <div className="absolute text-center">
-                  <span className="text-lg font-black text-white">{r.score}%</span>
+                  <span className="text-lg font-black text-dark-100">{r.score}%</span>
                 </div>
               </div>
             </div>
@@ -171,7 +181,7 @@ export default function ReportPage() {
                     cx="40"
                     cy="40"
                     r="32"
-                    className="text-dark-950"
+                    className="text-dark-800/80"
                     strokeWidth="4"
                     stroke="currentColor"
                     fill="transparent"
@@ -204,7 +214,7 @@ export default function ReportPage() {
                     cx="40"
                     cy="40"
                     r="32"
-                    className="text-dark-950"
+                    className="text-dark-800/80"
                     strokeWidth="4"
                     stroke="currentColor"
                     fill="transparent"
@@ -311,7 +321,7 @@ export default function ReportPage() {
                       <React.Fragment key={i}>
                         <tr className="hover:bg-dark-900/20 transition-colors">
                           <td className="px-6 py-5">
-                            <p className="text-xs font-black text-white mb-1.5">Round 0{i + 1}: {qa.question}</p>
+                            <p className="text-xs font-black text-dark-100 mb-1.5">Round 0{i + 1}: {qa.question}</p>
                             <p className="text-xs text-dark-400 line-clamp-2 italic font-semibold pl-3 border-l border-dark-800">
                               "{qa.answer || 'No response recorded.'}"
                             </p>
@@ -322,7 +332,7 @@ export default function ReportPage() {
                             </span>
                           </td>
                           <td className="px-6 py-5 text-center">
-                            <span className="text-xs font-black text-white">{qa.score}<span className="text-[9px] text-dark-600 ml-0.5">/10</span></span>
+                            <span className="text-xs font-black text-dark-100">{qa.score}<span className="text-[9px] text-dark-600 ml-0.5">/10</span></span>
                           </td>
                         </tr>
                         <tr className="bg-dark-950/20">

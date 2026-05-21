@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { HiMicrophone, HiArrowRight, HiCog, HiDatabase, HiCollection, HiLightningBolt } from 'react-icons/hi';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const topics = [
   { label: 'Software Engineer', icon: '💻', desc: 'Coding, system design, DSA, web technologies, and database architecture.' },
@@ -32,9 +33,9 @@ export default function LandingPage() {
         
         <div className="flex items-center gap-3 mb-12 relative z-10">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-primary-900/30">
-            <HiMicrophone className="w-5 h-5 text-white" />
+            <HiMicrophone className="w-5 h-5 text-always-white" />
           </div>
-          <span className="text-lg font-black tracking-tight text-white uppercase bg-gradient-to-r from-white to-dark-300 bg-clip-text text-transparent">
+          <span className="text-lg font-black tracking-tight text-dark-100 uppercase bg-gradient-to-r from-dark-100 to-dark-300 bg-clip-text text-transparent">
             Prep Portal
           </span>
         </div>
@@ -52,11 +53,12 @@ export default function LandingPage() {
           </div> */}
         </nav>
 
-        <div className="mt-auto pt-8 border-t border-dark-800/80 relative z-10">
+        <div className="mt-auto pt-8 border-t border-dark-800/80 relative z-10 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-md shadow-emerald-500/50" />
             <span className="text-[10px] font-black uppercase tracking-widest text-dark-500">Practice Engine Online</span>
           </div>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -68,26 +70,26 @@ export default function LandingPage() {
         <div className="lg:hidden flex items-center justify-between mb-8 pb-6 border-b border-dark-800">
            <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
-                <HiMicrophone className="w-4 h-4 text-white" />
+                <HiMicrophone className="w-4 h-4 text-always-white" />
               </div>
-              <span className="text-sm font-black text-white uppercase tracking-tighter">Prep Portal</span>
+              <span className="text-sm font-black text-dark-100 uppercase tracking-tighter">Prep Portal</span>
            </div>
-           <div className="status-active py-1 px-2.5 text-[9px]">Live</div>
+           <div className="flex items-center gap-3">
+             <ThemeToggle />
+             <div className="status-active py-1 px-2.5 text-[9px]">Live</div>
+           </div>
         </div>
 
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 relative z-10">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mb-2 leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-dark-100 mb-2 leading-tight tracking-tight">
               Mock Interview Hub
             </h1>
             <p className="text-dark-400 text-sm font-medium">Practice speaking naturally and prepare to ace your upcoming job interview.</p>
           </div>
-          {/* <div className="flex gap-4">
-            <div className="bg-dark-900/80 backdrop-blur-md border border-dark-800/80 rounded-xl px-4 py-2.5 text-right flex-1 sm:flex-initial shadow-md">
-              <span className="block text-[9px] font-black text-dark-500 uppercase tracking-wider mb-0.5">AI Interviewer</span>
-              <span className="text-xs font-bold text-white whitespace-nowrap">Gemini Active</span>
-            </div>
-          </div> */}
+          <div className="hidden lg:block">
+            <ThemeToggle />
+          </div>
         </header>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 max-w-7xl relative z-10">
@@ -126,12 +128,12 @@ export default function LandingPage() {
                           {t.icon}
                         </span>
                         {isSelected && (
-                          <div className="w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center text-[10px] text-white font-bold animate-fade-in shadow-md shadow-primary-500/20">
+                          <div className="w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center text-[10px] text-always-white font-bold animate-fade-in shadow-md shadow-primary-500/20">
                             ✓
                           </div>
                         )}
                       </div>
-                      <h3 className="text-xs font-black text-white group-hover:text-primary-400 transition-colors duration-300 mb-1 relative z-10">
+                      <h3 className="text-xs font-black text-dark-100 group-hover:text-primary-400 transition-colors duration-300 mb-1 relative z-10">
                         {t.label}
                       </h3>
                       <p className="text-[10px] text-dark-500 font-medium leading-normal line-clamp-2 relative z-10">
@@ -162,8 +164,8 @@ export default function LandingPage() {
                         onClick={() => setQuestions(opt.val)}
                         className={`p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
                           questions === opt.val
-                            ? 'border-primary-500 bg-primary-600/10 text-white font-bold ring-1 ring-primary-500/20'
-                            : 'border-dark-800 bg-dark-950/40 text-dark-400 hover:border-dark-700 hover:text-white'
+                            ? 'border-primary-500 bg-primary-600 text-always-white font-bold shadow-md shadow-primary-500/20'
+                            : 'border-dark-800 bg-dark-950/40 text-dark-400 hover:border-dark-700 hover:text-dark-100'
                         }`}
                       >
                         <span className="block text-sm font-black">{opt.label}</span>
@@ -187,8 +189,8 @@ export default function LandingPage() {
                         onClick={() => setDifficulty(opt.val)}
                         className={`p-3 rounded-xl border text-center transition-all duration-200 cursor-pointer ${
                           difficulty === opt.val
-                            ? 'border-primary-500 bg-primary-600/10 text-white font-bold ring-1 ring-primary-500/20'
-                            : 'border-dark-800 bg-dark-950/40 text-dark-400 hover:border-dark-700 hover:text-white'
+                            ? 'border-primary-500 bg-primary-600 text-always-white font-bold shadow-md shadow-primary-500/20'
+                            : 'border-dark-800 bg-dark-950/40 text-dark-400 hover:border-dark-700 hover:text-dark-100'
                         }`}
                       >
                         <span className="block text-sm font-black">{opt.label}</span>
@@ -213,13 +215,13 @@ export default function LandingPage() {
               <div className="space-y-4 mb-8 relative z-10">
                 <div className="flex justify-between items-center text-xs pb-3 border-b border-dark-800/50">
                   <span className="text-dark-500 font-bold uppercase tracking-wider text-[9px]">Target Topic</span>
-                  <span className={`font-black px-2 py-0.5 rounded text-[11px] ${topic ? 'text-white bg-dark-800 border border-dark-700' : 'text-dark-600'}`}>
+                  <span className={`font-black px-2 py-0.5 rounded text-[11px] ${topic ? 'text-dark-100 bg-dark-800 border border-dark-700' : 'text-dark-600'}`}>
                     {topic || 'None Selected'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-xs pb-3 border-b border-dark-800/50">
                   <span className="text-dark-500 font-bold uppercase tracking-wider text-[9px]">Questions</span>
-                  <span className="text-white font-black">{questions} Questions</span>
+                  <span className="text-dark-100 font-black">{questions} Questions</span>
                 </div>
                 <div className="flex justify-between items-center text-xs pb-3 border-b border-dark-800/50">
                   <span className="text-dark-500 font-bold uppercase tracking-wider text-[9px]">Career Level</span>
@@ -229,7 +231,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-dark-500 font-bold uppercase tracking-wider text-[9px]">Mock Method</span>
-                  <span className="text-white font-bold">Voice Speech & Evaluation</span>
+                  <span className="text-dark-100 font-bold">Voice Speech & Evaluation</span>
                 </div>
               </div>
 
