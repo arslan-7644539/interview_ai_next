@@ -82,12 +82,12 @@ export default function LandingPage() {
             </h1>
             <p className="text-dark-400 text-sm font-medium">Practice speaking naturally and prepare to ace your upcoming job interview.</p>
           </div>
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <div className="bg-dark-900/80 backdrop-blur-md border border-dark-800/80 rounded-xl px-4 py-2.5 text-right flex-1 sm:flex-initial shadow-md">
               <span className="block text-[9px] font-black text-dark-500 uppercase tracking-wider mb-0.5">AI Interviewer</span>
               <span className="text-xs font-bold text-white whitespace-nowrap">Gemini Active</span>
             </div>
-          </div>
+          </div> */}
         </header>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 max-w-7xl relative z-10">
