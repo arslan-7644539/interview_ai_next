@@ -5,7 +5,7 @@
 
 :root {
   /* Default Theme: Light Mode */
-  --theme-dark-50: #020617;
+  --theme-dark-50: #090d1f;
   --theme-dark-100: #0f172a;
   --theme-dark-200: #1e293b;
   --theme-dark-300: #334155;
@@ -17,10 +17,11 @@
   --theme-dark-900: #f1f5f9;
   --theme-dark-950: #ffffff;
 
-  --theme-bg-radial: radial-gradient(circle at 50% 50%, #f8fafc 0%, #cbd5e1 100%);
-  --theme-glass-card-bg: rgba(255, 255, 255, 0.7);
-  --theme-card-border: rgba(0, 0, 0, 0.08);
-  --theme-sidebar-bg: rgba(248, 250, 252, 0.6);
+  --theme-bg-radial: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.04) 0%, transparent 45%), radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.04) 0%, transparent 45%), #f8fafc;
+  --theme-glass-card-bg: rgba(255, 255, 255, 0.75);
+  --theme-card-border: rgba(0, 0, 0, 0.06);
+  --theme-sidebar-bg: rgba(248, 250, 252, 0.5);
+  --theme-glass-card-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
 }
 
 :root.dark, .dark {
@@ -37,10 +38,11 @@
   --theme-dark-900: #0f172a;
   --theme-dark-950: #020617;
 
-  --theme-bg-radial: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
-  --theme-glass-card-bg: rgba(15, 23, 42, 0.6);
+  --theme-bg-radial: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.06) 0%, transparent 55%), radial-gradient(circle at 100% 100%, rgba(79, 70, 229, 0.06) 0%, transparent 55%), #020617;
+  --theme-glass-card-bg: rgba(15, 23, 42, 0.65);
   --theme-card-border: rgba(255, 255, 255, 0.05);
-  --theme-sidebar-bg: rgba(2, 6, 23, 0.4);
+  --theme-sidebar-bg: rgba(2, 6, 23, 0.35);
+  --theme-glass-card-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
 }
 
 @theme {
@@ -78,6 +80,7 @@
   --animate-bounce-slow: bounce 2s infinite;
   --animate-glow-pulse: glowPulse 2s infinite ease-in-out;
   --animate-glow-pulse-red: glowPulseRed 2s infinite ease-in-out;
+  --animate-spin-slow: spin 8s linear infinite;
 
   @keyframes fadeIn {
     0% { opacity: 0; }
@@ -98,6 +101,10 @@
   @keyframes glowPulseRed {
     0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2), 0 0 10px rgba(239, 68, 68, 0.1); }
     50% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.5), 0 0 25px rgba(239, 68, 68, 0.2); }
+  }
+  @keyframes waveBar {
+    0% { transform: scaleY(0.4); }
+    100% { transform: scaleY(1.8); }
   }
 }
 
@@ -197,18 +204,19 @@ body {
 
 @utility bg-governance {
   background: var(--theme-bg-radial);
-  transition: background 0.3s ease;
+  transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @utility glass-card {
   background-color: var(--theme-glass-card-bg);
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--theme-card-border);
-  border-radius: 0.75rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06), var(--theme-glass-card-glow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @utility glass-card-hover {
-  @apply hover:border-primary-500/30 hover:shadow-primary-500/5 transition-all duration-300;
+  @apply hover:border-primary-500/30 hover:shadow-lg hover:shadow-primary-500/[0.02] hover:-translate-y-1;
 }

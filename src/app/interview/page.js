@@ -190,7 +190,7 @@ function VoiceInterviewPageContent() {
         <div className="absolute inset-0 bg-primary-600/[0.03] blur-[150px] rounded-full pointer-events-none animate-pulse-slow" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-500/[0.02] blur-[100px] rounded-full pointer-events-none" />
         
-        <div className="relative z-10 text-center max-w-md w-full glass-card p-10 border border-dark-800/80 shadow-2xl">
+        <div className="relative z-10 text-center max-w-md w-full glass-card p-6 sm:p-10 border border-dark-800/80 shadow-2xl">
           {/* Animated floating icon */}
           <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center mx-auto mb-8 animate-bounce-slow shadow-xl shadow-primary-500/20">
             <HiMicrophone className="w-10 h-10 text-always-white" />
@@ -231,7 +231,7 @@ function VoiceInterviewPageContent() {
       <div className="min-h-screen bg-governance flex flex-col items-center justify-center p-6 relative overflow-hidden text-dark-100">
         <div className="absolute inset-0 bg-indigo-600/[0.03] blur-[150px] rounded-full pointer-events-none animate-pulse-slow" />
         
-        <div className="relative z-10 text-center max-w-md w-full glass-card p-10 border border-dark-800/80 shadow-2xl">
+        <div className="relative z-10 text-center max-w-md w-full glass-card p-6 sm:p-10 border border-dark-800/80 shadow-2xl">
           <div className="relative w-24 h-24 mx-auto mb-8">
             <div className="absolute inset-0 rounded-full border-4 border-white/5" />
             <div className="absolute inset-0 rounded-full border-4 border-t-primary-500 animate-spin" />
@@ -254,7 +254,7 @@ function VoiceInterviewPageContent() {
   return (
     <div className="min-h-screen bg-governance flex text-dark-100">
       {/* Sidebar - Contextual Info */}
-      <div className="w-72 border-r border-dark-800 bg-dark-950/40 hidden xl:flex flex-col p-8 shrink-0 relative overflow-hidden">
+      <div className="w-72 border-r border-dark-800 bg-dark-950/40 hidden lg:flex flex-col p-8 shrink-0 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-primary-600/[0.01] blur-3xl rounded-full pointer-events-none" />
         
         <div className="mb-10 relative z-10">
@@ -308,7 +308,6 @@ function VoiceInterviewPageContent() {
           <div className="status-active py-1 px-2.5 text-[9px] font-black tracking-widest">
              AI Active
           </div>
-          <ThemeToggle />
         </div>
       </div>
 
@@ -317,20 +316,20 @@ function VoiceInterviewPageContent() {
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary-600/[0.01] blur-[150px] rounded-full pointer-events-none" />
         
         {/* Mobile Mini Header */}
-        <div className="xl:hidden flex items-center justify-between mb-8 pb-4 border-b border-dark-800">
+        <div className="sticky top-0 z-50 lg:hidden flex items-center justify-between py-4 px-4 -mx-4 sm:-mx-8 border-b border-dark-800/80 backdrop-blur-md bg-governance/85 mb-8 shadow-sm">
            <div className="flex flex-col">
               <span className="text-[9px] font-black text-dark-500 uppercase tracking-widest">{topic}</span>
-              <span className="text-sm font-black text-dark-100">Round 0{idx + 1} of 0{totalQ}</span>
+              <span className="text-xs font-black text-dark-100">Round 0{idx + 1} of 0{totalQ}</span>
            </div>
            <div className="flex items-center gap-3">
              <ThemeToggle />
-             <div className="status-active py-1 px-2 text-[9px]">Active Practice</div>
+             <div className="status-active py-1 px-2 text-[9px] font-black tracking-widest">Active</div>
            </div>
         </div>
 
         <div className="max-w-4xl mx-auto w-full relative z-10 flex-1 flex flex-col justify-center">
           {/* Header (Desktop Only) */}
-          <div className="hidden xl:flex items-center justify-between mb-8">
+          <div className="hidden lg:flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-dark-900 to-dark-950 border border-dark-800 flex items-center justify-center text-dark-100 text-xs font-black shadow-md">
                 0{idx + 1}
@@ -349,7 +348,7 @@ function VoiceInterviewPageContent() {
           </div>
 
           {/* Question Card */}
-          <div className="glass-card p-6 sm:p-10 mb-8 border-dark-800/80 relative shadow-2xl">
+          <div className="glass-card p-4 sm:p-10 mb-8 border-dark-800/80 relative shadow-2xl">
             {/* Interviewer Avatar Speaking/Listening Indicator */}
             <div className="flex flex-col items-center justify-center mb-8 border-b border-dark-800/40 pb-6">
               <div className="relative w-20 h-20 flex items-center justify-center mb-3">
@@ -419,7 +418,7 @@ function VoiceInterviewPageContent() {
             {/* Response Form Layer */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
               {/* Voice Interaction Circle */}
-              <div className="lg:col-span-1 flex flex-col items-center justify-center py-6 border-r border-dark-800/40 relative">
+              <div className="lg:col-span-1 flex flex-col items-center justify-center py-6 border-b lg:border-b-0 lg:border-r border-dark-800/40 pb-6 lg:pb-0 mb-6 lg:mb-0 relative">
                 <div className="relative mb-5">
                   {isRecording && (
                     <div className="absolute -inset-4 bg-red-600/20 rounded-full animate-ping pointer-events-none" />

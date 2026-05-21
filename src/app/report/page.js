@@ -86,7 +86,6 @@ export default function ReportPage() {
             <p className="text-[9px] font-black text-dark-600 uppercase tracking-widest mb-1.5">Practice Portal</p>
             <p className="text-xs font-bold text-dark-400">Gemini Prep v3.5</p>
           </div>
-          <ThemeToggle />
         </div>
       </div>
 
@@ -95,16 +94,16 @@ export default function ReportPage() {
         <div className="absolute top-0 left-1/3 w-96 h-96 bg-emerald-600/[0.01] blur-[150px] rounded-full pointer-events-none" />
         
         {/* Mobile Header */}
-        <div className="lg:hidden flex items-center justify-between mb-8 pb-4 border-b border-b-dark-800">
+        <div className="sticky top-0 z-50 lg:hidden flex items-center justify-between py-4 px-4 -mx-4 sm:-mx-8 border-b border-dark-800/80 backdrop-blur-md bg-governance/85 mb-8 shadow-sm">
            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20">
                 <HiCheckCircle className="w-4 h-4 text-always-white" />
               </div>
-              <span className="text-sm font-black text-dark-100 uppercase tracking-tighter">Performance Report</span>
+              <span className="text-sm font-black text-dark-100 uppercase tracking-wider">Performance Report</span>
            </div>
            <div className="flex items-center gap-3">
              <ThemeToggle />
-             <div className="status-success py-1 px-2.5 text-[9px] font-bold">Done</div>
+             <div className="status-success py-1 px-2.5 text-[9px] font-black tracking-widest">Done</div>
            </div>
         </div>
 
@@ -130,9 +129,9 @@ export default function ReportPage() {
 
         <div className="space-y-8 max-w-6xl relative z-10">
           {/* Top Analytics Cards */}
-          <div className="glass-card grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-y sm:divide-y-0 md:divide-x divide-dark-800/80 shadow-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {/* Grade Card */}
-            <div className="p-6 sm:p-8 text-center flex flex-col items-center justify-center">
+            <div className="glass-card p-6 sm:p-8 text-center flex flex-col items-center justify-center shadow-xl hover:-translate-y-1 active:scale-[0.99] duration-300">
               <span className="block text-[9px] font-black text-dark-500 uppercase tracking-widest mb-4">Interview Grade</span>
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 text-3xl font-black text-emerald-600 dark:text-always-white shadow-lg shadow-emerald-500/10 animate-pulse">
                 {r.overallGrade}
@@ -140,10 +139,10 @@ export default function ReportPage() {
             </div>
 
             {/* Overall Score */}
-            <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center">
+            <div className="glass-card p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-xl hover:-translate-y-1 active:scale-[0.99] duration-300">
               <span className="block text-[9px] font-black text-dark-500 uppercase tracking-widest mb-4">Overall Score</span>
               <div className="relative w-20 h-20 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
                   <circle
                     cx="40"
                     cy="40"
@@ -173,10 +172,10 @@ export default function ReportPage() {
             </div>
 
             {/* Topic Accuracy */}
-            <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center">
+            <div className="glass-card p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-xl hover:-translate-y-1 active:scale-[0.99] duration-300">
               <span className="block text-[9px] font-black text-dark-500 uppercase tracking-widest mb-4">Topic Accuracy</span>
               <div className="relative w-20 h-20 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
                   <circle
                     cx="40"
                     cy="40"
@@ -206,10 +205,10 @@ export default function ReportPage() {
             </div>
 
             {/* Communication Clarity */}
-            <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center">
+            <div className="glass-card p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-xl hover:-translate-y-1 active:scale-[0.99] duration-300">
               <span className="block text-[9px] font-black text-dark-500 uppercase tracking-widest mb-4">Communication Clarity</span>
               <div className="relative w-20 h-20 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
                   <circle
                     cx="40"
                     cy="40"
@@ -306,7 +305,8 @@ export default function ReportPage() {
               <h3 className="text-xs font-black uppercase tracking-wider text-dark-400">Question & Answer Feedback Log</h3>
             </div>
             
-            <div className="glass-card overflow-hidden shadow-2xl">
+            {/* Desktop View: Table */}
+            <div className="hidden sm:block glass-card overflow-hidden shadow-2xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead className="bg-dark-950/80 border-b border-dark-800/80">
@@ -348,6 +348,40 @@ export default function ReportPage() {
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            {/* Mobile View: Stacked Round Assessment Cards */}
+            <div className="block sm:hidden space-y-4">
+              {r.questions?.map((qa, i) => (
+                <div key={i} className="glass-card p-5 border-dark-800/80 shadow-lg space-y-4">
+                  <div className="flex items-center justify-between border-b border-dark-800/40 pb-3">
+                    <span className="text-[10px] font-black text-dark-500 uppercase tracking-wider">Round 0{i + 1}</span>
+                    <div className="flex items-center gap-2">
+                      <span className={`status-chip text-[8px] px-2 py-0.5 rounded ${qa.isCorrect ? 'status-success' : 'status-danger'}`}>
+                        {qa.isCorrect ? 'Correct' : 'Needs Review'}
+                      </span>
+                      <span className="text-xs font-black text-dark-100">{qa.score}<span className="text-[9px] text-dark-600 ml-0.5">/10</span></span>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1.5">
+                    <h4 className="text-[9px] font-black text-dark-500 uppercase tracking-widest">Question:</h4>
+                    <p className="text-xs text-dark-100 leading-relaxed font-bold">{qa.question}</p>
+                  </div>
+                  
+                  <div className="space-y-1.5 pl-3 border-l border-dark-800/80">
+                    <h4 className="text-[9px] font-black text-dark-500 uppercase tracking-widest">Your Answer:</h4>
+                    <p className="text-xs text-dark-400 italic font-semibold leading-relaxed">
+                      "{qa.answer || 'No response recorded.'}"
+                    </p>
+                  </div>
+                  
+                  <div className="p-3.5 bg-dark-950/30 rounded-lg border border-dark-800/40 space-y-1.5">
+                    <span className="text-[9px] font-black text-primary-500 uppercase tracking-wider">AI Analysis:</span>
+                    <p className="text-[11px] text-dark-400 leading-relaxed font-semibold">{qa.feedback}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

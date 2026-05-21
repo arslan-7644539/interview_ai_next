@@ -58,7 +58,6 @@ export default function LandingPage() {
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-md shadow-emerald-500/50" />
             <span className="text-[10px] font-black uppercase tracking-widest text-dark-500">Practice Engine Online</span>
           </div>
-          <ThemeToggle />
         </div>
       </div>
 
@@ -67,16 +66,16 @@ export default function LandingPage() {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-600/[0.01] blur-[150px] rounded-full pointer-events-none" />
         
         {/* Mobile Header */}
-        <div className="lg:hidden flex items-center justify-between mb-8 pb-6 border-b border-dark-800">
+        <div className="sticky top-0 z-50 lg:hidden flex items-center justify-between py-4 px-4 -mx-4 sm:-mx-8 border-b border-dark-800/80 backdrop-blur-md bg-governance/85 mb-8 shadow-sm">
            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center shadow-md shadow-primary-500/20">
                 <HiMicrophone className="w-4 h-4 text-always-white" />
               </div>
-              <span className="text-sm font-black text-dark-100 uppercase tracking-tighter">Prep Portal</span>
+              <span className="text-sm font-black text-dark-100 uppercase tracking-wider">Prep Portal</span>
            </div>
            <div className="flex items-center gap-3">
              <ThemeToggle />
-             <div className="status-active py-1 px-2.5 text-[9px]">Live</div>
+             <div className="status-active py-1 px-2.5 text-[9px] font-black tracking-widest">Live</div>
            </div>
         </div>
 
@@ -92,9 +91,9 @@ export default function LandingPage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 max-w-7xl relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl relative z-10">
           {/* Main Configuration Layout */}
-          <div className="xl:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-8">
             {/* Step 1: Topic Selection Card */}
             <section className="glass-card p-6 sm:p-8">
               <div className="flex items-center justify-between mb-6">
@@ -177,7 +176,7 @@ export default function LandingPage() {
 
                 <div>
                   <label className="block text-[10px] font-black uppercase tracking-widest text-dark-500 mb-3">Target Career Level</label>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
                       { val: 'easy', label: 'Entry Level / Junior', sub: 'Foundations' },
                       { val: 'medium', label: 'Associate / Mid-Level', sub: 'Applied Scenarios' },
