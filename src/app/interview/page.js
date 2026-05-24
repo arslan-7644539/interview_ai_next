@@ -28,9 +28,35 @@ function VoiceInterviewPageContent() {
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceOk, setVoiceOk] = useState(true);
+  const [inputMode, setInputMode] = useState('voice'); // 'voice' | 'text'
 
   const recRef = useRef(null);
   const synthRef = useRef(null);
+
+  const handleInputModeChange = (mode) => {
+    if (isRecording) {
+      intentionalStopRef.current = true;
+      recRef.current?.stop();
+      recRef.current = null;
+      setIsRecording(false);
+
+      finalizedTextRef.current = (finalizedTextRef.current + ' ' + sessionFinalsRef.current).replace(/\s+/g, ' ').trim();
+      sessionFinalsRef.current = '';
+
+      if (sessionConfidencesRef.current.length > 0) {
+        const qId = activeQIdRef.current;
+        questionConfidencesRef.current[qId] = [
+          ...(questionConfidencesRef.current[qId] || []),
+          ...sessionConfidencesRef.current
+        ];
+        sessionConfidencesRef.current = [];
+      }
+
+      const currentQId = activeQIdRef.current;
+      setAnswers(p => ({ ...p, [currentQId]: finalizedTextRef.current }));
+    }
+    setInputMode(mode);
+  };
 
   // Initialize Speech Synthesis
   useEffect(() => {
@@ -599,61 +625,166 @@ function VoiceInterviewPageContent() {
               </button>
             </div>
 
+            {/* Input Mode Selector Tab */}
+            <div className="flex gap-3 mb-5 border-b border-dark-800/40 pb-4 relative z-10">
+              <button
+                type="button"
+                onClick={() => handleInputModeChange('voice')}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                  inputMode === 'voice'
+                    ? 'bg-primary-600/15 border border-primary-500/20 text-primary-400 font-extrabold shadow-sm'
+                    : 'text-dark-500 hover:text-dark-300 border border-transparent hover:bg-dark-900/10'
+                }`}
+              >
+                <HiMicrophone className="w-4 h-4" />
+                Voice Interview Mode
+              </button>
+              <button
+                type="button"
+                onClick={() => handleInputModeChange('text')}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                  inputMode === 'text'
+                    ? 'bg-primary-600/15 border border-primary-500/20 text-primary-400 font-extrabold shadow-sm'
+                    : 'text-dark-500 hover:text-dark-300 border border-transparent hover:bg-dark-900/10'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Text Input Mode
+              </button>
+            </div>
+
             {/* Response Form Layer */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
-              {/* Voice Interaction Circle */}
-              <div className="lg:col-span-1 flex flex-col items-center justify-center py-6 border-b lg:border-b-0 lg:border-r border-dark-800/40 pb-6 lg:pb-0 mb-6 lg:mb-0 relative">
-                <div className="relative mb-5">
-                  {isRecording && (
-                    <div className="absolute -inset-4 bg-red-600/20 rounded-full animate-ping pointer-events-none" />
-                  )}
-                  <button 
-                    onClick={toggleMic} 
-                    disabled={!voiceOk}
-                    type="button"
-                    className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 border cursor-pointer relative z-10 ${
-                      isRecording 
-                        ? 'bg-gradient-to-r from-red-500 to-rose-600 border-red-500 text-always-white animate-glow-pulse-red shadow-lg shadow-red-500/20 scale-[1.03]' 
-                        : 'bg-dark-950/60 border-dark-800 text-dark-400 hover:text-dark-100 hover:border-dark-600 hover:bg-dark-900'
-                    }`}
-                  >
-                    {isRecording ? <HiStop className="w-6 h-6 animate-pulse" /> : <HiMicrophone className="w-6 h-6" />}
-                  </button>
-                </div>
-                
-                <span className={`text-[9px] font-black uppercase tracking-widest ${isRecording ? 'text-red-500 animate-pulse font-extrabold' : 'text-dark-500'}`}>
-                  {isRecording ? 'Listening' : 'Speak Answer'}
-                </span>
+              {inputMode === 'voice' ? (
+                <>
+                  {/* Voice Interaction Circle */}
+                  <div className="lg:col-span-1 flex flex-col items-center justify-center py-6 border-b lg:border-b-0 lg:border-r border-dark-800/40 pb-6 lg:pb-0 mb-6 lg:mb-0 relative">
+                    <div className="relative mb-5">
+                      {isRecording && (
+                        <div className="absolute -inset-4 bg-red-600/20 rounded-full animate-ping pointer-events-none" />
+                      )}
+                      <button 
+                        onClick={toggleMic} 
+                        disabled={!voiceOk}
+                        type="button"
+                        className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 border cursor-pointer relative z-10 ${
+                          isRecording 
+                            ? 'bg-gradient-to-r from-red-500 to-rose-600 border-red-500 text-always-white animate-glow-pulse-red shadow-lg shadow-red-500/20 scale-[1.03]' 
+                            : 'bg-dark-950/60 border-dark-800 text-dark-400 hover:text-dark-100 hover:border-dark-600 hover:bg-dark-900'
+                        }`}
+                      >
+                        {isRecording ? <HiStop className="w-6 h-6 animate-pulse" /> : <HiMicrophone className="w-6 h-6" />}
+                      </button>
+                    </div>
+                    
+                    <span className={`text-[9px] font-black uppercase tracking-widest ${isRecording ? 'text-red-500 animate-pulse font-extrabold' : 'text-dark-500'}`}>
+                      {isRecording ? 'Listening' : 'Speak Answer'}
+                    </span>
 
-                {/* Animated Audio Wave bars */}
-                {isRecording && (
-                  <div className="flex items-center gap-0.5 mt-3 h-4">
-                    {[1, 2, 3, 4, 5].map(bar => (
-                      <div 
-                        key={bar} 
-                        className="w-0.5 bg-red-500/80 rounded-full" 
-                        style={{
-                          height: `${8 + Math.sin(bar) * 6}px`,
-                          animation: 'waveBar 0.8s ease-in-out infinite alternate',
-                          animationDelay: `${bar * 0.12}s`
-                        }}
-                      />
-                    ))}
+                    {/* Animated Audio Wave bars */}
+                    {isRecording && (
+                      <div className="flex items-center gap-0.5 mt-3 h-4">
+                        {[1, 2, 3, 4, 5].map(bar => (
+                          <div 
+                            key={bar} 
+                            className="w-0.5 bg-red-500/80 rounded-full" 
+                            style={{
+                              height: `${8 + Math.sin(bar) * 6}px`,
+                              animation: 'waveBar 0.8s ease-in-out infinite alternate',
+                              animationDelay: `${bar * 0.12}s`
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* Transcription Area */}
-              <div className="lg:col-span-4">
-                <div className="bg-dark-950/30 border border-dark-800/80 rounded-xl p-5 h-44 focus-within:border-primary-500/40 focus-within:bg-dark-950/50 transition-all duration-300">
-                   <textarea
-                    value={currentAns}
-                    onChange={(e) => setAnswers(p => ({ ...p, [q.id]: e.target.value }))}
-                    className="w-full h-full bg-transparent border-none focus:ring-0 text-dark-100 placeholder-dark-600 resize-none text-xs font-semibold leading-relaxed outline-none"
-                    placeholder="Your spoken response will be transcribed here. Click the mic to speak or type your answer directly..."
-                  />
+                  {/* Voice Skeleton Area instead of Textarea */}
+                  <div className="lg:col-span-4 flex flex-col justify-center">
+                    <div className={`bg-dark-950/35 border rounded-2xl p-6 h-44 flex flex-col items-center justify-center relative overflow-hidden transition-all duration-500 backdrop-blur-md ${
+                      isRecording 
+                        ? 'border-primary-500/40 shadow-lg shadow-primary-500/[0.05] bg-dark-950/50' 
+                        : 'border-dark-800/90 hover:border-dark-700/80'
+                    }`}>
+                      {isRecording ? (
+                        <>
+                          {/* Ambient background glows */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary-950/15 via-indigo-950/10 to-transparent pointer-events-none" />
+                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary-500/[0.02] blur-3xl rounded-full pointer-events-none" />
+                          
+                          {/* Top status & feedback bar */}
+                          <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[8px] font-black tracking-widest text-primary-400 bg-primary-500/10 border border-primary-500/20 uppercase">
+                              <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-ping" />
+                              AI Listening
+                            </span>
+                            
+                            {/* Live Word Count Indicator */}
+                            {currentAns.trim() && (
+                              <span className="inline-flex items-center gap-1 text-[9px] font-black text-dark-400 uppercase tracking-wider bg-dark-800/80 px-2 py-0.5 rounded border border-dark-700/60 animate-fade-in">
+                                🎙️ {currentAns.trim().split(/\s+/).length} Words Recorded
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Organic Soundwave Visualizer */}
+                          <div className="flex items-end gap-1 mb-2 h-14 relative z-10 pt-4">
+                            {[...Array(24)].map((_, i) => {
+                              // Create asymmetric wave pattern
+                              const delay = (i * 0.05).toFixed(2);
+                              const baseHeight = 12 + Math.abs(Math.sin(i * 0.4)) * 28;
+                              return (
+                                <div
+                                  key={i}
+                                  className="w-1 rounded-full origin-bottom transition-all duration-300 bg-gradient-to-t from-primary-600 via-indigo-500 to-teal-400"
+                                  style={{
+                                    height: `${baseHeight}px`,
+                                    animation: `waveBar 0.55s ease-in-out ${delay}s infinite alternate`
+                                  }}
+                                />
+                              );
+                            })}
+                          </div>
+                          
+                          <div className="text-center relative z-10 mt-1">
+                            <p className="text-[10px] text-dark-300 font-bold uppercase tracking-wider">
+                              Analyzing your response... speak clearly at your own pace
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {/* Idle state */}
+                          <div className="w-12 h-12 rounded-full border border-dark-800/80 flex items-center justify-center mb-3 bg-dark-900/60 shadow-inner group-hover:scale-105 transition-transform duration-300">
+                            <HiMicrophone className="w-5 h-5 text-dark-500" />
+                          </div>
+                          <div className="text-center">
+                            <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[9px] font-black tracking-widest text-dark-500 bg-dark-800 border border-dark-700/60 uppercase mb-2">
+                              {/* Microphone Inactive */}
+                               Click the mic button to start recording your response
+                            </span>
+                            
+                          
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="lg:col-span-5">
+                  <div className="bg-dark-950/30 border border-dark-800/80 rounded-xl p-5 h-44 focus-within:border-primary-500/40 focus-within:bg-dark-950/50 transition-all duration-300">
+                     <textarea
+                      value={currentAns}
+                      onChange={(e) => setAnswers(p => ({ ...p, [q.id]: e.target.value }))}
+                      className="w-full h-full bg-transparent border-none focus:ring-0 text-dark-100 placeholder-dark-600 resize-none text-xs font-semibold leading-relaxed outline-none"
+                      placeholder="Type your response here. Take your time to write a detailed answer..."
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Submit Response Trigger */}
