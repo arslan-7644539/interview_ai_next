@@ -152,9 +152,24 @@ export const generateReport = async (topic, results) => {
   const correct = results.filter(r => r.isCorrect).length;
   const accuracy = totalQ > 0 ? Math.round((correct / totalQ) * 100) : 0;
 
-  const base = { topic, score: percentage, accuracy, totalMarks: totalScore, maxMarks: maxScore };
+  // Calculate overall average speech recognition confidence
+  const spokenResults = results.filter(r => r.speechConfidence !== null && r.speechConfidence !== undefined);
+  const avgSpeechConfidence = spokenResults.length > 0
+    ? Math.round(spokenResults.reduce((sum, r) => sum + r.speechConfidence, 0) / spokenResults.length)
+    : null;
 
-  if (!isAIAvailable()) return { ...base, ...fallbackReport(percentage, accuracy) };
+  const base = { 
+    topic, 
+    score: percentage, 
+    accuracy, 
+    totalMarks: totalScore, 
+    maxMarks: maxScore,
+    avgSpeechConfidence 
+  };
+
+  if (!isAIAvailable()) {
+    return { ...base, ...fallbackReport(percentage, accuracy), questions: results };
+  }
 
   try {
     const model = getModel(0.5);

@@ -95,22 +95,77 @@ const techTerms = {
   'saving account': 'savings account', 'interest rate': 'interest rate',
   'bureaucracy': 'bureaucracy', 'democracy': 'democracy', 'dictatorship': 'dictatorship',
   'inflation': 'inflation', 'call center': 'call center', 'bpo': 'BPO', 'b p o': 'BPO',
+
+  // Common Google STT misrecognitions
+  'reacts': 'React\'s', 'react hooks': 'React Hooks',
+  'note js': 'Node.js', 'know js': 'Node.js', 'no js': 'Node.js',
+  'post grass': 'Postgres', 'post gress': 'Postgres', 'post gres q l': 'PostgreSQL',
+  'my sequel': 'MySQL', 'my sql': 'MySQL',
+  'mongo db': 'MongoDB', 'mongo d b': 'MongoDB',
+  'redis': 'Redis', 'read is': 'Redis',
+  'get hub': 'GitHub', 'git hub': 'GitHub',
+  'micro services': 'microservices', 'micro service': 'microservice',
+  'type script': 'TypeScript', 'java script': 'JavaScript',
+  'linter': 'linter', 'es lint': 'ESLint',
+  'webpack': 'Webpack', 'web pack': 'Webpack',
+  'babel': 'Babel', 'babble': 'Babel',
+  'tailwind': 'Tailwind', 'tail wind': 'Tailwind',
+  'bootstrap': 'Bootstrap', 'boot strap': 'Bootstrap',
+  'sequel': 'SQL', 'see quill': 'SQL',
+
+  // Common accent misrecognitions (South Asian English → en-US)
+  'vari able': 'variable', 'ware able': 'wearable',
+  'para meter': 'parameter', 'para meters': 'parameters',
+  'in hair it ance': 'inheritance', 'in heritage': 'inheritance',
+  'poly morph ism': 'polymorphism', 'poly more fizz um': 'polymorphism',
+  'en capsule ation': 'encapsulation', 'in capsulation': 'encapsulation',
+  'ab straction': 'abstraction',
+  'al gore ith um': 'algorithm', 'al go rhythm': 'algorithm',
+  'data base': 'database', 'date a base': 'database',
+  'frame work': 'framework', 'frame works': 'frameworks',
+  'front and': 'frontend', 'front end': 'frontend',
+  'back and': 'backend', 'back end': 'backend',
+  'full stack': 'full-stack', 'full stag': 'full-stack',
+  'deploy meant': 'deployment', 'deploy ment': 'deployment',
+  'scaler bility': 'scalability', 'scale ability': 'scalability',
 };
 
+// Pre-compile regex patterns once for performance
+const compiledTerms = Object.entries(techTerms)
+  .sort((a, b) => b[0].length - a[0].length)  // longest first
+  .map(([spoken, correct]) => ({
+    regex: new RegExp(`\\b${spoken}\\b`, 'gi'),
+    correct,
+  }));
+
+// Filler words/sounds that clutter transcripts
+const fillerPattern = /\b(um+|uh+|hmm+|err+|ah+|like,?\s+like|you know,?\s*|basically,?\s*|actually,?\s*|so,?\s+so)\b/gi;
+
 /**
- * Normalize voice transcript — fix tech terms that speech recognition mangles
+ * Normalize voice transcript — fix tech terms that speech recognition mangles,
+ * remove filler words, and clean up punctuation/spacing.
  */
 export const normalizeTranscript = (text) => {
   if (!text) return text;
   let normalized = text;
 
-  // Sort by length (longest first) to avoid partial matches
-  const sorted = Object.entries(techTerms).sort((a, b) => b[0].length - a[0].length);
-
-  for (const [spoken, correct] of sorted) {
-    const regex = new RegExp(`\\b${spoken}\\b`, 'gi');
+  // 1. Apply tech term corrections
+  for (const { regex, correct } of compiledTerms) {
     normalized = normalized.replace(regex, correct);
   }
+
+  // 2. Remove filler words/sounds
+  normalized = normalized.replace(fillerPattern, ' ');
+
+  // 3. Clean up spacing artifacts
+  normalized = normalized
+    .replace(/\s+/g, ' ')             // collapse multiple spaces
+    .replace(/\s([.,!?;:])/g, '$1')   // no space before punctuation
+    .replace(/([.,!?;:])(\w)/g, '$1 $2')  // space after punctuation
+    .trim();
+
+  // 4. Capitalize first letter of sentences
+  normalized = normalized.replace(/(^|[.!?]\s+)([a-z])/g, (_, pre, letter) => pre + letter.toUpperCase());
 
   return normalized;
 };

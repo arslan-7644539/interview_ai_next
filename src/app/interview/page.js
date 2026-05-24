@@ -48,8 +48,10 @@ function VoiceInterviewPageContent() {
     if (!SR) setVoiceOk(false);
     loadQuestions();
     return () => {
+      intentionalStopRef.current = true;
       if (synthRef.current) synthRef.current.cancel();
       recRef.current?.stop();
+      recRef.current = null;
     };
   }, [topic]);
 
@@ -86,15 +88,42 @@ function VoiceInterviewPageContent() {
     });
   }, []);
 
-  // ---- STT ----
+  // ---- STT (Enhanced Voice Recognition) ----
+  // Ref to accumulate finalized text across auto-restarts (avoids stale closure issues)
+  const finalizedTextRef = useRef('');
+  const intentionalStopRef = useRef(false);
+  const activeQIdRef = useRef(null);
+  const sessionFinalsRef = useRef('');
+  const sessionConfidencesRef = useRef([]);
+  const questionConfidencesRef = useRef({}); // { [qId]: [confidences] }
+
   const toggleMic = useCallback(() => {
     if (isRecording) {
+      // User intentionally stops — don't auto-restart
+      intentionalStopRef.current = true;
       recRef.current?.stop();
       recRef.current = null;
       setIsRecording(false);
+
+      // Accumulate final session text and confidences
+      finalizedTextRef.current = (finalizedTextRef.current + ' ' + sessionFinalsRef.current).replace(/\s+/g, ' ').trim();
+      sessionFinalsRef.current = '';
+
+      if (sessionConfidencesRef.current.length > 0) {
+        const qId = activeQIdRef.current;
+        questionConfidencesRef.current[qId] = [
+          ...(questionConfidencesRef.current[qId] || []),
+          ...sessionConfidencesRef.current
+        ];
+        sessionConfidencesRef.current = [];
+      }
+
+      const currentQId = activeQIdRef.current;
+      setAnswers(p => ({ ...p, [currentQId]: finalizedTextRef.current }));
       return;
     }
 
+    // Cancel any ongoing TTS so it doesn't interfere
     if (synthRef.current) {
       synthRef.current.cancel();
     }
@@ -103,46 +132,126 @@ function VoiceInterviewPageContent() {
     const SR = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
     if (!SR) return;
 
-    const rec = new SR();
-    rec.continuous = true;
-    rec.interimResults = true;
-    rec.lang = 'en-PK';
-
     const qId = questions[idx]?.id;
-    const initialText = answers[qId] || '';
+    activeQIdRef.current = qId;
+    // Seed the accumulator with any existing answer text
+    finalizedTextRef.current = answers[qId] || '';
+    intentionalStopRef.current = false;
+    sessionFinalsRef.current = '';
+    sessionConfidencesRef.current = [];
 
-    rec.onresult = (e) => {
-      let sessionFinal = '';
-      let sessionInterim = '';
-      for (let i = 0; i < e.results.length; i++) {
-        const transcript = e.results[i][0].transcript;
-        if (e.results[i].isFinal) {
-          sessionFinal += ' ' + transcript;
-        } else {
-          sessionInterim += ' ' + transcript;
+    const createRecognition = () => {
+      const rec = new SR();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.maxAlternatives = 3;         // Let engine propose multiple hypotheses
+      rec.lang = 'en-US';             // Well-supported, high-accuracy model
+
+      rec.onresult = (e) => {
+        let sessionFinals = '';
+        let currentInterim = '';
+        const currentConfidences = [];
+
+        for (let i = 0; i < e.results.length; i++) {
+          if (e.results[i].isFinal) {
+            // Pick the highest-confidence alternative
+            let bestTranscript = e.results[i][0].transcript;
+            let bestConfidence = e.results[i][0].confidence;
+
+            for (let alt = 1; alt < e.results[i].length; alt++) {
+              if (e.results[i][alt].confidence > bestConfidence) {
+                bestConfidence = e.results[i][alt].confidence;
+                bestTranscript = e.results[i][alt].transcript;
+              }
+            }
+
+            // Only accept results above a minimum confidence threshold
+            if (bestConfidence >= 0.4 || bestConfidence === 0) {
+              // confidence === 0 means the browser doesn't report confidence (Firefox)
+              sessionFinals += ' ' + bestTranscript;
+              if (bestConfidence > 0) {
+                currentConfidences.push(bestConfidence);
+              }
+            }
+          } else {
+            // For interim, just use the top result for live preview
+            currentInterim += ' ' + e.results[i][0].transcript;
+          }
         }
-      }
 
-      // Normalize phonetic/transcription errors on the fly
-      const cleanSessionFinal = normalizeTranscript(sessionFinal);
-      const cleanSessionInterim = normalizeTranscript(sessionInterim);
+        // Store this session's finalized segment text and confidences
+        sessionFinalsRef.current = normalizeTranscript(sessionFinals);
+        sessionConfidencesRef.current = currentConfidences;
 
-      const combinedText = (initialText + ' ' + cleanSessionFinal + ' ' + cleanSessionInterim)
-        .replace(/\s+/g, ' ')
-        .trim();
+        // Build display text: finalized (prior sessions) + sessionFinals (this session) + current interim preview
+        const cleanInterim = normalizeTranscript(currentInterim);
+        const displayText = (finalizedTextRef.current + ' ' + sessionFinalsRef.current + ' ' + cleanInterim)
+          .replace(/\s+/g, ' ')
+          .trim();
 
-      setAnswers(p => ({ ...p, [qId]: combinedText }));
+        const currentQId = activeQIdRef.current;
+        setAnswers(p => ({ ...p, [currentQId]: displayText }));
+      };
+
+      rec.onerror = (e) => {
+        // 'no-speech' and 'aborted' are normal — don't alarm the user
+        if (e.error === 'no-speech' || e.error === 'aborted') return;
+        // 'network' errors can happen on spotty connections
+        if (e.error === 'network') {
+          toast.error('Voice recognition needs an internet connection');
+        } else if (e.error === 'not-allowed') {
+          toast.error('Microphone permission denied. Please allow mic access.');
+        } else {
+          toast.error(`Mic error: ${e.error}`);
+        }
+        setIsRecording(false);
+      };
+
+      rec.onend = () => {
+        // Append sessionFinals and confidences to finalized stores
+        finalizedTextRef.current = (finalizedTextRef.current + ' ' + sessionFinalsRef.current).replace(/\s+/g, ' ').trim();
+        sessionFinalsRef.current = '';
+
+        if (sessionConfidencesRef.current.length > 0) {
+          const currentQId = activeQIdRef.current;
+          questionConfidencesRef.current[currentQId] = [
+            ...(questionConfidencesRef.current[currentQId] || []),
+            ...sessionConfidencesRef.current
+          ];
+          sessionConfidencesRef.current = [];
+        }
+
+        // Auto-restart if the user didn't intentionally stop
+        // (Browser cuts off after silence or max duration)
+        if (!intentionalStopRef.current && recRef.current) {
+          try {
+            // Strip interim text — only keep finalized before restart
+            const currentQId = activeQIdRef.current;
+            setAnswers(p => ({ ...p, [currentQId]: finalizedTextRef.current }));
+
+            const newRec = createRecognition();
+            newRec.start();
+            recRef.current = newRec;
+          } catch {
+            // If restart fails, stop gracefully
+            setIsRecording(false);
+          }
+        } else {
+          setIsRecording(false);
+        }
+      };
+
+      return rec;
     };
 
-    rec.onerror = (e) => {
-      if (e.error !== 'aborted') toast.error('Mic error');
-      setIsRecording(false);
-    };
-    rec.onend = () => setIsRecording(false);
-
-    rec.start();
-    recRef.current = rec;
-    setIsRecording(true);
+    try {
+      const rec = createRecognition();
+      rec.start();
+      recRef.current = rec;
+      setIsRecording(true);
+    } catch {
+      toast.error('Could not start voice recognition');
+    }
   }, [isRecording, questions, idx, answers]);
 
   // ---- Submit ----
@@ -151,18 +260,39 @@ function VoiceInterviewPageContent() {
     const ans = answers[q?.id] || '';
     if (!ans.trim()) { toast.error('Speak or type your answer first'); return; }
 
-    recRef.current?.stop(); setIsRecording(false);
+    intentionalStopRef.current = true;
+    recRef.current?.stop(); recRef.current = null; setIsRecording(false);
+
+    // Force finalize any remaining session texts/confidences
+    finalizedTextRef.current = (finalizedTextRef.current + ' ' + sessionFinalsRef.current).replace(/\s+/g, ' ').trim();
+    sessionFinalsRef.current = '';
+
+    if (sessionConfidencesRef.current.length > 0) {
+      questionConfidencesRef.current[q.id] = [
+        ...(questionConfidencesRef.current[q.id] || []),
+        ...sessionConfidencesRef.current
+      ];
+      sessionConfidencesRef.current = [];
+    }
+
+    const finalAns = finalizedTextRef.current || ans;
     setSubmitting(true); setFeedback(null);
+
+    // Calculate speech confidence score for this question
+    const qConfList = questionConfidencesRef.current[q.id] || [];
+    const avgConf = qConfList.length > 0 ? (qConfList.reduce((a, b) => a + b, 0) / qConfList.length) : null;
+    const finalSpeechConfidence = avgConf !== null ? Math.round(avgConf * 100) : null;
 
     try {
       const { data } = await axios.post(`${API}/interview/evaluate`, {
-        question: q.question, answer: ans, expectedKeyPoints: q.expectedKeyPoints || [], topic,
+        question: q.question, answer: finalAns, expectedKeyPoints: q.expectedKeyPoints || [], topic,
       });
       const ev = data.data;
       setFeedback(ev);
       setResults(p => [...p.filter(r => r.questionId !== q.id), {
-        questionId: q.id, question: q.question, answer: ans,
+        questionId: q.id, question: q.question, answer: finalAns,
         score: ev.score, maxScore: ev.maxScore, feedback: ev.feedback, isCorrect: ev.isCorrect,
+        speechConfidence: finalSpeechConfidence,
       }]);
       await speak(ev.feedback);
     } catch {
@@ -174,7 +304,27 @@ function VoiceInterviewPageContent() {
 
   // ---- Navigate ----
   const goTo = (i) => {
-    recRef.current?.stop(); setIsRecording(false);
+    intentionalStopRef.current = true;
+    recRef.current?.stop(); recRef.current = null; setIsRecording(false);
+
+    // Finalize currently active question text & confidences
+    const activeQId = activeQIdRef.current;
+    if (activeQId) {
+      finalizedTextRef.current = (finalizedTextRef.current + ' ' + sessionFinalsRef.current).replace(/\s+/g, ' ').trim();
+      sessionFinalsRef.current = '';
+
+      if (sessionConfidencesRef.current.length > 0) {
+        questionConfidencesRef.current[activeQId] = [
+          ...(questionConfidencesRef.current[activeQId] || []),
+          ...sessionConfidencesRef.current
+        ];
+        sessionConfidencesRef.current = [];
+      }
+
+      // Update answers state so work isn't lost
+      setAnswers(p => ({ ...p, [activeQId]: finalizedTextRef.current }));
+    }
+
     if (synthRef.current) synthRef.current.cancel();
     setIsSpeaking(false);
     setFeedback(null); setIdx(i);
@@ -182,13 +332,30 @@ function VoiceInterviewPageContent() {
   };
 
   const finish = async () => {
-    recRef.current?.stop();
+    intentionalStopRef.current = true;
+    recRef.current?.stop(); recRef.current = null;
     if (synthRef.current) synthRef.current.cancel();
     setPhase('finishing');
     try {
       const finalResults = questions.map(q => {
         const r = results.find(r => r.questionId === q.id);
-        return r || { questionId: q.id, question: q.question, answer: answers[q.id] || '', score: 0, maxScore: 10, feedback: 'Not answered.', isCorrect: false };
+        if (r) return r;
+
+        const ans = answers[q.id] || '';
+        const qConfList = questionConfidencesRef.current[q.id] || [];
+        const avgConf = qConfList.length > 0 ? (qConfList.reduce((a, b) => a + b, 0) / qConfList.length) : null;
+        const finalSpeechConfidence = avgConf !== null ? Math.round(avgConf * 100) : null;
+
+        return {
+          questionId: q.id,
+          question: q.question,
+          answer: ans,
+          score: 0,
+          maxScore: 10,
+          feedback: 'Not answered.',
+          isCorrect: false,
+          speechConfidence: finalSpeechConfidence
+        };
       });
       const { data } = await axios.post(`${API}/interview/report`, { topic, results: finalResults });
       sessionStorage.setItem('interview_report', JSON.stringify(data.data));

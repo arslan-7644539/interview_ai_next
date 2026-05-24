@@ -204,9 +204,13 @@ export default function ReportPage() {
               </div>
             </div>
 
-            {/* Communication Clarity */}
+            {/* Communication Clarity / Speech Input Accuracy */}
             <div className="glass-card p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-xl hover:-translate-y-1 active:scale-[0.99] duration-300">
-              <span className="block text-[9px] font-black text-dark-500 uppercase tracking-widest mb-4">Communication Clarity</span>
+              <span className="block text-[9px] font-black text-dark-500 uppercase tracking-widest mb-4">
+                {r.avgSpeechConfidence !== null && r.avgSpeechConfidence !== undefined 
+                  ? 'Speech Input Accuracy' 
+                  : 'Communication Clarity'}
+              </span>
               <div className="relative w-20 h-20 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
                   <circle
@@ -225,14 +229,20 @@ export default function ReportPage() {
                     className="text-primary-400 transition-all duration-1000"
                     strokeWidth="4"
                     strokeDasharray={201}
-                    strokeDashoffset={201 - (201 * r.confidenceLevel) / 100}
+                    strokeDashoffset={
+                      201 - (201 * (r.avgSpeechConfidence !== null && r.avgSpeechConfidence !== undefined ? r.avgSpeechConfidence : r.confidenceLevel)) / 100
+                    }
                     strokeLinecap="round"
                     stroke="currentColor"
                     fill="transparent"
                   />
                 </svg>
                 <div className="absolute text-center">
-                  <span className="text-lg font-black text-primary-400">{r.confidenceLevel}%</span>
+                  <span className="text-lg font-black text-primary-400">
+                    {r.avgSpeechConfidence !== null && r.avgSpeechConfidence !== undefined 
+                      ? `${r.avgSpeechConfidence}%` 
+                      : `${r.confidenceLevel}%`}
+                  </span>
                 </div>
               </div>
             </div>
@@ -325,6 +335,14 @@ export default function ReportPage() {
                             <p className="text-xs text-dark-400 line-clamp-2 italic font-semibold pl-3 border-l border-dark-800">
                               "{qa.answer || 'No response recorded.'}"
                             </p>
+                            {qa.speechConfidence !== null && qa.speechConfidence !== undefined && (
+                              <div className="mt-1.5 flex items-center gap-1 text-[10px] text-primary-400 font-extrabold uppercase tracking-wider pl-3">
+                                <span>🎙️ Speech Match Confidence:</span>
+                                <span className={`px-1.5 py-0.2 rounded ${qa.speechConfidence >= 80 ? 'bg-emerald-500/10 text-emerald-400' : qa.speechConfidence >= 60 ? 'bg-amber-500/10 text-amber-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                                  {qa.speechConfidence}%
+                                </span>
+                              </div>
+                            )}
                           </td>
                           <td className="px-6 py-5 text-center">
                             <span className={`status-chip text-[9px] ${qa.isCorrect ? 'status-success' : 'status-danger'}`}>
@@ -374,6 +392,14 @@ export default function ReportPage() {
                     <p className="text-xs text-dark-400 italic font-semibold leading-relaxed">
                       "{qa.answer || 'No response recorded.'}"
                     </p>
+                    {qa.speechConfidence !== null && qa.speechConfidence !== undefined && (
+                      <div className="mt-1.5 flex items-center gap-1 text-[9px] text-primary-400 font-extrabold uppercase tracking-wider">
+                        <span>🎙️ Speech Confidence:</span>
+                        <span className={`px-1.5 py-0.2 rounded ${qa.speechConfidence >= 80 ? 'bg-emerald-500/10 text-emerald-400' : qa.speechConfidence >= 60 ? 'bg-amber-500/10 text-amber-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                          {qa.speechConfidence}%
+                        </span>
+                      </div>
+                    )}
                   </div>
                   
                   <div className="p-3.5 bg-dark-950/30 rounded-lg border border-dark-800/40 space-y-1.5">
