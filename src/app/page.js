@@ -83,7 +83,8 @@ export default function LandingPage() {
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 relative z-10">
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-dark-100 mb-2 leading-tight tracking-tight">
-              Mock Interview Hub
+              {/* Mock Interview Hub */}
+              Confidence Hub
             </h1>
             <p className="text-dark-400 text-sm font-medium">Practice speaking naturally and prepare to ace your upcoming job interview.</p>
           </div>
